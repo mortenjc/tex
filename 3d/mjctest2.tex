@@ -1,0 +1,17 @@
+\documentclass[a4paper]{article}
+\usepackage{pstricks}
+\usepackage{pst-3dplot}
+\begin{document}
+\begin{figure}
+\begin{pspicture}(-10,15)(0,0)
+   \pstThreeDCoor[xMin=0,yMin=0,zMin=0]
+   \pstThreeDSphere[linewidth=0.5pt](0,0,0){3}
+   \psset{SphericalCoor}
+   \pstThreeDNode(3,0,0){x_base}
+   \pstThreeDNode(6,0,0){x_end}
+   \psline[linecolor=black]{->}(x_base)(x_end)
+  % uhh, where does this axis start?
+   \pstThreeDLine[linecolor=green]{->}(3,0,90)(6,0,90)
+\end{pspicture}
+\end{figure}
+\end{document}

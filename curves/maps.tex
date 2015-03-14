@@ -1,0 +1,101 @@
+\chapter{Maps}
+\label{maps}
+
+As a short digression we will here describe how coordinate transformations 
+have some practical applications within \myindx{navigation}. A position on the surface
+of the earth is given by a pair of coordinates called the \myindx{latitude} and \myindx{longitude}.
+The process of creating a correspondance between points on the (spherical) earth and 
+on a piece of paper (a map) is called a \myindx{projection}.
+
+\section{Mercator projection}
+
+Given the latitude and longitude as $\phi$ and $\lambda$ on the sphere
+the \myindx{Mercator projection} provides the following formula for 
+the projection
+
+$$
+      \vec{r'} = (x',y') = \Big(\lambda-\lambda_0,\; \ln\big(\tan(\frac{\pi}{4}  + \frac{\phi}{2})\big)\Big)
+$$
+
+
+\vspace{0.5cm}
+\begin{figure}[!ht]
+\twocol{
+  \begin{center}
+    \begin{pspicture}(-2,-2)(2,2) 
+    \psset{unit=2cm}
+      \pstThreeDCoor[xMin=-1.5,xMax=1.5, yMax=1.5, zMax=1.5] 
+      \pstThreeDSphere[SegmentColor={[cmyk]{0,0,0,0}}](0,0,0){1} 
+      \parametricplotThreeD[linecolor=red, algebraic,plotstyle=curve,linewidth=1.5pt](-0.7,2.10)
+          {cos(t)| sin(t)|0}
+      \parametricplotThreeD[linecolor=red, algebraic,plotstyle=curve,linewidth=1.5pt](0.0,2.40)
+          {sin(1.22)*sin(t)| cos(1.22)*sin(t)|cos(t)}
+      \parametricplotThreeD[linecolor=blue, algebraic,plotstyle=curve,linewidth=1.5pt](0.6,1.57)
+          {0| sin(t)|cos(t)}
+      \parametricplotThreeD[linecolor=blue, algebraic,plotstyle=curve,linewidth=1.5pt](0.6,1.57)
+          {sin(0.6)*sin(t) | cos(0.6)*sin(t)|cos(t)}
+      \parametricplotThreeD[linecolor=blue,algebraic,plotstyle=curve,linewidth=1.5pt](1.0,1.57)
+          {cos(t)| sin(t)|0}
+      \parametricplotThreeD[linecolor=blue,algebraic,plotstyle=curve,linewidth=1.5pt](1.0,1.57)
+          {sin(0.6)*cos(t)| sin(0.6)*sin(t)|cos(0.6)}
+      \pstThreeDDot(0,1,0)                   % bottom right
+      \pstThreeDDot(1 Cos ,1 Sin,0)          % bottom left
+      \pstThreeDDot(0,0.6 Sin,0.6 Cos)       % top right
+      \pstThreeDDot(0.6 Sin 1.0 Cos mul,0.6 Sin 1.0 Sin mul,0.6 Cos) % top left
+    \end{pspicture}
+  \end{center}
+}{
+  \begin{center}
+  \begin{tikzpicture}[scale=0.8]
+    \draw[step=.5cm,mjcgrid] (-3.5-0.4,-2.5-0.4) grid (3.5 + 0.4,2.5 +0.4 );
+    \pgfsetlinewidth{1pt};
+
+    \draw [->,red] (-3.5,0) -- (3.5,0); 
+    \draw [->,red] (0,-2.5) -- (0,2.5); 
+    \draw (-3.5,-2.5) -- (-3.5,2.5); 
+    \draw (-3.5,2.5) -- (3.5,2.5); 
+    \draw (3.5,2.5) -- (3.5,-2.5); 
+    \draw (3.5,-2.5) -- (-3.5,-2.5); 
+    \draw [blue] (2,0) -- (2,2.0); 
+    \draw [blue] (2,2.0) -- (1,2.0); 
+    \draw [blue] (1,2.0) -- (1,0); 
+    \draw [blue] (1,0) -- (2,0); 
+
+    \fill (1,0) circle (2pt);
+    \fill (1,2) circle (2pt);
+    \fill (2,0) circle (2pt);
+    \fill (2,2) circle (2pt);
+
+    \node [right]  at (3.5,0) {$x'$};
+    \node [above]  at (0,2.5) {$y'$};
+    \node [below right]  at (-3.5,0) {$-180^\circ$};
+    \node [below left]  at (3.5,0) {$180^\circ$};
+    \node [below right]  at (0,2.5) {$90^\circ$};
+    \node [above right]  at (0,-2.5) {$-90^\circ$};
+  \end{tikzpicture}
+  \end{center}
+}
+  \caption{\small Mercator projection. Note how the upper horizontal line is 
+stretched so that it has the same length as the lower. This is why areas are
+not preserved in the Mercator projection.}
+  \label{fig-mercator}
+\end{figure}
+
+\fixme{Add points and definitions to maps}
+
+\myhrule
+\begin{myex}
+What are the coordinates in the Mercator transform of the point on equator on the 
+\myindx{Greenwich meridian} $(0^\circ,0^\circ)$? How about the location of Copenhagen $(12^\circ45',55^\circ40')$?
+
+\vspace{0.5cm}
+Assuming that we center the map on the Greenwich meridian we set  $\lambda_0=0$. This gives
+$(x',y') = (0, \ln(\tan(\pi/4))) = (0,0)$.
+
+\vspace{0.5cm}
+For the location of Copenhagen we first represent the coordinates in decimal degrees. Noting that $60'=1^\circ$, 
+gives $(12.75^\circ, 55.66^\circ)$, so the longitude is $12.75^\circ$. For the latitude we get $\ln(\tan(45^\circ+55.66^\circ/2))=
+1.17$. This a somewhat arbitrary scale where equator is 0 and $45^\circ$ is at $0.88$. Since the North pole will 
+be at infinity in this projection some cutoff latitude must be employed. 
+
+\end{myex}

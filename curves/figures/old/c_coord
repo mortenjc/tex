@@ -1,0 +1,38 @@
+set isosamples 60,60
+set parametric
+set surface
+set urange [-5*pi:5*pi]
+set vrange [-5*pi:5*pi]
+
+set view 20, 35 
+
+set size 1,1
+
+set border 0
+set nokey
+set noxtics
+set noytics
+set noztics
+
+
+r=1.0
+x(u,v)= u 
+y(u,v)= v 
+z(u,v)= r*cos(sqrt(u**2 +v**2))*exp(-0.1*sqrt(u**2+v**2))
+
+cx(u,v)=0
+cy(u,v)=u-pi/2
+cz(u,v)=v/2 -1.5
+
+set pm3d
+unset colorbox 
+
+
+set term x11 
+splot x(u,v), y(u,v), z(u,v) lt rgb "#404040" 
+pause -1
+set term epslatex 
+set output "coord.eps"
+replot
+
+

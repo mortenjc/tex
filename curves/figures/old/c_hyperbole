@@ -1,0 +1,34 @@
+set isosamples 40,40
+set parametric
+set surface
+set urange [-pi:pi]
+set vrange [-pi:pi]
+set zrange [-pi*pi:pi*pi]
+set view 38, 299 
+
+set size 1,1
+set ticslevel 0
+
+set nokey
+set border 0
+set noxtics
+set noytics
+set noztics
+
+x(u,v)= u
+y(u,v)= v
+z(u,v)= u*u - v*v 
+
+cx(u,v) = u*sin(u)
+cy(u,v) = u*cos(u) 
+cz(u,v)=  cx(u,v)*cx(u,v) - cy(u,v)*cy(u,v)
+
+
+set term x11
+splot x(u,v), y(u,v), z(u,v)  lt rgb "#404040" ,  cx(u,v), cy(u,v), cz(u,v) lt rgb "black" lw 3
+#;splot x(u,v), y(u,v), z(u,v)  lt rgb "#404040" ,  cx(u,v), cy(u,v), cz(u,v) lt rgb "black" lw 3, pi, cy(u,v), cz(u,v) lt rgb "black", cx(u,v), cy(u,v),-pi*pi lt rgb "black"
+pause -1
+set term epslatex
+set output "hyp_curv.eps"
+replot
+

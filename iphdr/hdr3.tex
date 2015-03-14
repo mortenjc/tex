@@ -1,0 +1,112 @@
+
+\documentclass[empty]{article}
+\usepackage{bytefield,color}
+\begin{document}
+\thispagestyle{empty}
+
+\newcommand{\colorbitbox}[3]{% 
+  \rlap{\bitbox{#2}{\color{#1}\rule{\width}{\height}}}% 
+   \bitbox{#2}{#3}}
+\definecolor{lightgray}{gray}{0.8}
+\begin{bytefield}{8}
+\bitbox[]{5}{6}
+\bitbox[]{5}{6}
+\bitbox[]{3}{2}
+\bitbox[]{8}{20}
+\bitbox[]{6}{8}
+\bitbox[]{10}{0-1472}
+\bitbox[]{4}{4}\\
+\colorbitbox{lightgray}{5}{dmac}
+\colorbitbox{lightgray}{5}{smac}
+\colorbitbox{lightgray}{3}{type}
+\colorbitbox{lightgray}{8}{ip}
+\colorbitbox{lightgray}{6}{udp}
+\bitbox{10}{61162-450 message}
+\colorbitbox{lightgray}{4}{crc32}
+\end{bytefield}
+
+\setlength{\unitlength}{10cm}
+\begin{picture}(6,.2)
+\put(0.07,0.02){\line(5,1){0.77}}
+\put(1.07,0.02){\line(1,2){0.077}}
+\end{picture}
+
+\begin{bytefield}{32}
+%\bitheader{0,7,8,15,16,23,24,31}\\
+\wordgroupr{61162-450 header}
+\bitbox[]{2}{0}
+\bitbox{8}{U}
+\bitbox{8}{d}
+\bitbox{8}{P}
+\bitbox{8}{b}\\
+
+\bitbox[]{2}{4}
+\bitbox{8}{C}
+\bitbox{8}{'0'} 
+\endwordgroupr \\
+
+\wordgroupr{61162-450 payload}
+\bitbox[]{2}{6}
+\bitbox{8}{\textbackslash}
+\bitbox{8}{s}
+\bitbox{8}{:}
+\bitbox{8}{T}\\
+
+\bitbox[]{2}{10}
+\bitbox{8}{I}
+\bitbox{8}{0}
+\bitbox{8}{0}
+\bitbox{8}{0}\\
+
+\bitbox[]{2}{14}
+\bitbox{8}{1}
+\bitbox{8}{,}
+\bitbox{8}{n}
+\bitbox{8}{:}\\
+
+\bitbox[]{2}{18}
+\bitbox{8}{3}
+\bitbox{8}{3}
+\bitbox{8}{4}
+\bitbox{8}{*}\\
+
+\bitbox[]{2}{22}
+\bitbox{8}{1}
+\bitbox{8}{9}
+\bitbox{8}{\textbackslash}
+\bitbox{8}{\$}\\
+
+\bitbox[]{2}{26}
+\bitbox{8}{T}
+\bitbox{8}{I}
+\bitbox{8}{R}
+\bitbox{8}{O}\\
+
+\bitbox[]{2}{30}
+\bitbox{8}{T}
+\bitbox{8}{,}
+\bitbox{8}{1}
+\bitbox{8}{2}\\
+
+\bitbox[]{2}{34}
+\bitbox{8}{3}
+\bitbox{8}{.}
+\bitbox{8}{4}
+\bitbox{8}{5}\\
+
+\bitbox[]{2}{38}
+\bitbox{8}{*}
+\bitbox{8}{6}
+\bitbox{8}{7}
+\bitbox{8}{{\footnotesize $<$CR$>$}}\\
+
+\bitbox[]{2}{42}
+\bitbox{8}{{\footnotesize $<$LF$>$}}
+
+\endwordgroupr \\
+\end{bytefield}
+
+
+\vspace{0.5cm}
+\textbackslash s:TI0001,n:334*19\textbackslash\$TIROT,123.45*67$<$CR$><$LF$>$
+\end{document}

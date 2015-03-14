@@ -1,0 +1,156 @@
+
+\input{macros.tex}
+
+%\includeonly{vectors}
+%\includeonly{coordsys}
+%\includeonly{maps}
+%\includeonly{2dcurves}
+%\includeonly{3dcurves}
+%\includeonly{curvature_I}
+%\includeonly{curvature_II}
+%\includeonly{tangents}
+%\includeonly{4dcurves}
+%\includeonly{parallel}
+%\includeonly{maxima}
+%\includeonly{people}
+%\includeonly{refs}
+
+\documentclass[a4paper,openany,10pt]{memoir}
+\chapterstyle{bianchi}
+\usepackage[ISBN=978-87-994778-1-4]{ean13isbn}
+\usepackage{makeidx}
+\usepackage{auto-pst-pdf}
+\usepackage{xcolor}
+\usepackage{color}
+%\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+\usepackage{graphicx,ifthen,amsmath,listings,tikz}
+\usepackage{amsthm}
+\usepackage{pstricks}
+\usepackage{pst-3dplot}
+\usepackage{pst-solides3d}
+
+\theoremstyle{remark} % Removes italic from example text 
+\newtheorem{myex}{Example}[chapter]
+
+\makeindex
+%\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{%
+    \markboth{#1}{}} 
+\renewcommand{\sectionmark}[1]{%
+    \markright{\thesection\ #1}}
+
+% TikZ Styles and Modules
+\tikzset{mjcgrid/.style={help lines,color=blue!20}}
+\usetikzlibrary{calc}
+
+
+% Document
+\begin{document}
+\enlargethispage{3\baselineskip}
+\thispagestyle{empty}
+{
+\pagecolor[HTML]{660066}
+\color{white}\Large\bfseries
+
+\vspace*{\droptitle}
+\begin{flushright} \Large \lineskip 0.5em
+     Morten Jagd Christensen \par
+\end{flushright}
+
+\begin{center} \HUGE \sffamily
+Mathematics of Curves and Surfaces
+  \par 
+\end{center}
+
+\vspace{2cm}
+
+%\begin{figure}
+%\input{figures/trefoil.eps}
+%\end{figure}
+
+  \begin{figure}[htb]
+    \begin{center}
+      \includegraphics[width=12cm,height=12cm]{figures/trefoil}
+    \end{center}
+  \end{figure}
+
+\vspace*{\baselineskip}
+
+\begin{center}
+  \Large \textsf{jCAPS Publishing \textbullet\ Autumn 2010}
+\end{center}
+}
+
+  \clearpage
+  \pagecolor[HTML]{FFFFFF}
+  \color{black}
+  \tableofcontents
+  \include{introduction}
+  \include{vectors}
+  \include{2dcurves}
+%  \include{tangents}  % included from 2dcurves
+%  \include{curvature_I} % included from 2dcurves
+%  \include{3dcurves}
+  \include{coordsys}
+  \include{maps}
+  \include{surfaces}
+  \include{curvature_II}
+  \include{maxima}
+  \include{parallel}
+  \include{4dcurves}
+  \appendix
+  \include{notation}
+  \include{people}
+  \include{tools}
+  \include{refs}
+  \printindex
+
+\enlargethispage{3\baselineskip}
+\thispagestyle{empty}
+\pagecolor[HTML]{660066}
+
+\begin{center}
+\begin{minipage}{.9\textwidth}
+\color{white}\Large\bfseries
+This pamphlet started as a self study in General Relativity, a subject along with 
+Astronomy which have inspired me over the years. However, in order to (as far as I can) completely
+understand the subject of GR I really had to read up on the mathematics of 
+curved surfaces.
+
+
+\begin{center}
+\LARGE\bfseries\sffamily\color{yellow}`Not too bad.' - A. Nonymous
+\end{center}
+
+I then decided to wrap up my notes so I could pick up where I left at some later 
+time. For typesetting I reverted back to one of my old favorites - \LaTeX - and 
+investigated what was new since I wrote my Ph.D. fifteen years ago. I then 
+found the TikZ package which was very suitable for presenting some nice graphics.
+So here we are - enjoy!
+
+\end{minipage}
+\end{center}
+
+\vspace*{\stretch{1}}
+
+\begin{center}
+\vspace*{\baselineskip}
+
+\textbf{\textcolor{white}{jCAPS Publishing \textbullet\ \texttt{http://www.jcaps.com}}}
+
+\textbf{\textcolor{yellow}{Forsidedesign af Morten Jagd Christensen \textbullet\ \texttt{http://www.jcaps.com}}}
+
+\vspace{0.25cm}
+\includegraphics[width=40mm]{figures/jcapslogo.jpg}
+\end{center}
+
+\vspace{1.25cm}
+
+\begin{minipage}{0.5\textwidth}
+\colorbox{white}{\EANisbn[SC4]}
+\end{minipage}
+
+
+
+\end{document}

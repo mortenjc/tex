@@ -1,0 +1,65 @@
+\chapter{Introduction}
+
+æøåÆØÅ
+
+I began writing this document as a side effect of trying to understand General Relativity, which makes 
+heavy use of \myindx{differential geometry}.
+
+Here I will show some examples of 2D surfaces embedded in 3D euclidian spaces, how to create 
+curves on these surfaces and how to evaulate the length of these curves. The necessary 
+mathematics is introduced but the reader is assumed to be familiar with vectors, matrices and 
+\myindx{differential calculus}. Several examples are given with detailed calculations.
+
+
+Chapter \ref{sec:vectors} gives some basic definitions of vectors and their properties. 
+We then do a quick brush up on functions of one variable in 2-dimensions in chapter \ref{sec:2dcurves}, 
+how to find the areas and lengths of these curves, etc. 
+Chapter \ref{sec:coordsys} describes a number of different coordinate systems in 3-dimentional 
+space and how to transform from one coordinate system to another. Following this is a short 
+description of maps and projections in chapter \ref{maps}.
+In chapter \ref{sec:surfaces} we show how a surface can be described as a parametrization of the 
+three dimentional coordinates $\vec{r}$ by two independent variables, and how curves can be 
+described as the parametrization of $\vec{r}$ by one variable. In section \ref{sec:christoffel} a 
+number of detailed examples of calculations based on the metric
+tensor are given.
+A brief description of parallel transport of vectors along curves is given in chapter \ref{sec:parallel}. 
+Chapter \ref{sec:4dcurves} extends the previous ideas to higher dimensions.
+
+\vspace{0.5cm}
+\index{latex package!amsmath}
+\index{latex package!graphicx}
+\index{latex package!listings}
+\index{latex package!amsthm}
+\index{latex package!fancyhdr}
+\index{latex package!pstricks}
+\index{latex package!pst-3dplot}
+The document is typeset with \LaTeX a lot of different packages: \emph{\myindx{amsmath}, \myindx{graphicx}, 
+\myindx{listings}, \myindx{amsthm},
+\myindx{fancyhdr}},...the list goes on. The figures are created by tools with varying support for 
+integration with \LaTeX\ such as \textbf{gnuplot}, \TikZ\, \emph{\myindx{pstricks}} and \emph{\myindx{pst-3dplot}} packages. 
+Where numerical results are required, such as difficult 
+integrals, or simplification of formulae \url{\myindx{WolframAlpha.com}} has been used as 
+well as Romberg integration 
+routines written in C and C++. To reduce the occurence of manual errors, the software package Maxima 
+was used for symbolic manipulation of algebraic expressions. Appendix \ref{sec:tools} gives details
+on how to use these tools in conjunction with \LaTeX.
+
+
+\begin{figure}
+  \begin{center}
+  \psset{unit=0.75} 
+  \begin{pspicture}(-5.5,-7)(4.5,4) 
+    \psset[pst-solides3d]{viewpoint=20 120 30 rtp2xyz, Decran=50,lightsrc=-10 15 10}
+    \defFunction{shell}(u,v) 
+        {1.2 v exp u Sin dup mul v   Cos mul mul} 
+        {1.2 v exp u Sin dup mul v   Sin mul mul} 
+        {1.2 v exp u Sin u   Cos mul mul}
+    \psSolid[object=surfaceparametree, linecolor=black!70, base=0 pi pi 4 div neg 5 pi mul 2 div, 
+         hue=0 1, fillcolor=blue!50,incolor=black!90, function=shell,linewidth=0.5\pslinewidth,ngrid =40]% 
+  \end{pspicture}
+\end{center}
+\vspace{1cm}
+\begin{center}
+Mathematical surface of a \myindx{logaritmic spiral} very similar to the one created by the \emph{\myindx{Nautilus pompilius}} cephalopod.
+\end{center}
+\end{figure}

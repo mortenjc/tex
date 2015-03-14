@@ -1,0 +1,503 @@
+\chapter{Coordinate systems}
+\label{sec:coordsys}
+
+\section{Basis vectors}
+The principal use of a coordinate system is to provide directions i space. A point is clearly located somewhere, but how to define ``somewhere''?
+
+Assume that somehow we have obtained a number of directions (one for the line, two for the plane, three for space, $\ldots$. In the following we assume the dimensionality 2.
+We shall call these directions \myindx{basis vectors} $\vec{e}_i$. Every point in space can be described uniquely by 
+two numbers $\lambda_i$ associated with the basis vectors
+
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[scale=2]
+  \draw[step=.25cm,mjcgrid] (-0.4,-0.24) grid (3.4,3.4);
+  \pgfsetlinewidth{1pt}
+
+  \def\a{15}
+  \coordinate (o)  at (0,0);
+  \coordinate (ox) at (3,0);
+  \coordinate (oy) at (0,3);
+  \coordinate (p)  at (1.5,2);
+  \coordinate (c)  at (canvas polar cs:angle=\a,radius=3cm);
+  \coordinate (d)  at (canvas polar cs:angle=90-\a,radius=3cm);
+
+  \draw [->,red] (o) -- (c); 
+  \draw [->,red] (o) -- (d); 
+  \draw [->]     (o) -- (ox); 
+  \draw [->]     (o) -- (oy); 
+  \pgfsetlinewidth{2pt}
+  \draw [->,red] (o) -- (canvas polar cs:angle=\a, radius=1cm); 
+  \draw [->,red] (o) -- (canvas polar cs:angle=90-\a, radius=1cm); 
+  \draw [->]     (o) -- (1,0); 
+  \draw [->]     (o) -- (0,1); 
+  \pgfsetlinewidth{1pt}
+  \node [right] at (1,2.5)  {$\bar{p}= a\vec{e}_x + b\vec{e}_y = c\vec{e}_x' + d\vec{e}_y'$};
+
+  \pgfsetlinewidth{0.75pt}
+  \draw [dotted] (p) -- ($(o)!(p)!(ox)$); 
+  \draw [dotted] (p) -- ($(o)!(p)!(oy)$); 
+  \draw [dotted,red] (p) -- ($(o)!(p)!(c)$);
+  \draw [dotted,red] (p) -- ($(o)!(p)!(d)$);
+  \pgfsetlinewidth{1pt}
+  \node [below]  at ($(o)!(p)!(ox)$)  {$a$};
+  \node [left]   at ($(o)!(p)!(oy)$)  {$b$};
+  \node [below,red]  at ($(o)!(p)!(c)$)  {$c$};
+  \node [left,red]   at ($(o)!(p)!(d)$)  {$d$};
+  \node [right]  at (ox) {$\mathbf{x}$};
+  \node [below]  at (0.5,0) {$\vec{e}_x$};
+  \node [rotate=\a,right,red] at (c) {\textbf{x'}};
+  \node [rotate=-\a,above,red] at (d) {\textbf{y'}};
+  \node [above,red]  at (0.6,0.125) {$\vec{e}_x'$};
+  \node [right,red]  at (0.125,0.5) {$\vec{e}_y'$};
+  \node [above]  at (oy) {$\mathbf{y}$};
+  \node [left]   at (0,0.5) {$\vec{e}_y$};
+  \fill (p) circle (1pt);
+  \fill (o) circle (1pt);
+\end{tikzpicture}
+\end{center}
+\caption{\small The same point will have different coordinates when the basis vectors are different.}
+\end{figure}
+
+$$
+    \vec{r} = \lambda^1\;\vec{e}_1 + \lambda^2\;\vec{e}_2 \equiv \lambda^i\;\vec{e}_i 
+$$
+where the summation over all values of $i$ is implicitly assumed.
+
+The basis vectors can be calculated as $\vec{e}_i = \dvd{\vec{r}}{u_i}$. 
+
+\section{The metric tensor}
+In order to calculate lengths of curves, areas, angles and curvatures, a mathematical tool 
+has shown to be handy. It is called the metric tensor. The \myindx{metric tensor} can
+be derived as the dot product of all possible combinations of the basis vectors.
+This is written as $g_{ij} =\vec{e}_i\cdot\vec{e}_j$.
+
+Don't worry about the word \myindx{tensor} - so far we can just regard it as a matrix, shown here 
+for dimension 3.
+$$
+   g_{ij} = \begin{pmatrix}
+              g_{11} & g_{12} & g_{13} \\
+              g_{21} & g_{22} & g_{23} \\
+              g_{31} & g_{32} & g_{33} 
+            \end{pmatrix}
+$$
+
+
+
+\vspace{0.5cm}
+We here give some examples from two dimensional space on how the metric tensor is invovled in 
+evaluating different geometrical properties.
+
+\subsubsection{Lengths}
+
+Let's say we have a point $p$ given as a \myindx{linear combination} of the two 
+basis vectors $\eet$ and $\eto$. $p=a \eet + b \eto$
+
+The dot product of $p$ with itself is the square of the length: 
+$$
+|p|^2 = p\cdot p = a^2 \eets + 2ab\;\eetto + b^2 \etos
+= a^2 g_{11} + 2ab\; g_{12} + b^2 g_{22}
+$$
+
+
+\subsubsection{Angles}
+For two vectors $p,q$ defined as 
+$p=a \eet + b \eto$, $q=c \eet + d \eto$
+
+The dot product of $p$ and $q$ is related to the angle $\alpha$ between them as
+$$
+  p \cdot q = |p| |q| \cos(\alpha) 
+$$
+
+working out the dot product from the definitions of $p$ and $q$ gives
+$$
+|p| |q| \cos(\alpha) = ac\;\eets + (ad + bc)\eetto + bd\;\etos = A\;g_{11} + B\;g_{12} + C\;g_{22}
+$$
+
+\subsubsection{Areas}
+For two vectors $p,q$ defined as 
+$p=a \eet + b \eto$, $q=c \eet + d \eto$
+
+The length of the cross product is equal to the area spanned by the two vectors, or 
+$$
+   A^2 = p\times q \cdot p\times q = (a \eet + b \eto)\times(c \eet + d \eto) \cdot (a \eet + b \eto)\times(c \eet + d \eto)
+$$
+this can be simplified, as $\vec{a}\times\vec{a}=0$, and $\vec{a}\times\vec{b} = -\vec{b}\times\vec{a}$, to
+$$
+  A^2 = (ad - bc)(\vec{e}_1\times\vec{e}_2)\cdot(\vec{e}_1\times\vec{e}_2) 
+$$
+
+$$
+  = (ad-bc)[(\eet\cdot\eet)(\eto\cdot\eto) - \eet\cdot\eto] = (ad-bd)[g_{11}^2g_{22}^2 - g_{12}]
+$$
+
+\subsubsection{Curvature}
+
+The \myindx{curvature} of a surface with a metric tensor $g_{ij}$ is given as 
+
+$$
+  K =  
+   \frac{1}{\sqrt{g}} \left[
+        \frac{\partial}{\partial u_2} \left( \frac{\sqrt{g}}{g_{11}}\Gamma^2_{11}   \right)
+      - \frac{\partial}{\partial u_1} \left( \frac{\sqrt{g}}{g_{11}}\Gamma^2_{12}   \right)
+     \right]
+$$
+
+where 
+
+$$
+    \Gamma^2_{1j} = \frac{1}{2} g^{k2} \left( \frac{\partial g_{1k}}{\partial u^j}  
+                 +\frac{\partial g_{jk}}{\partial u^1}
+                 -\frac{\partial g_{1j}}{\partial u^k}
+       \right)
+$$
+and
+$$
+    g = g_{11}\;g_{22} - g_{12}^2
+$$
+
+
+This formula was discovered by Carl Friedrich Gauss, and also has an equivalent in higher 
+dimensions. Even if we don't want to calculate the curvature we can 
+sometimes recognize a flat surface: If the components of the metric tensor are 
+all constant, all derivatives are zero and therefore the curvature is zero and the surface flat.
+
+\subsubsection{Summary}
+To summarize: For the purpose of calculating all sorts of geometrical values we need to know the basis vectors, and from them
+the metric tensor. These considerations are also valid for higher dimensions.
+
+
+\section{Cartesian coordinates}
+The \myindx{cartesian coordinates}, named after \myindx{Rene Descartes}, are our well known every day
+coordinates $x,y$ and $z$.
+$$
+  \vec{r} = (x,y,z) 
+$$
+
+The coordinates can have any value.
+
+$$
+   -\infty<x<\infty,\quad  -\infty<y<\infty,\quad  -\infty<z<\infty
+$$
+
+The basis vectors are calculated as  
+
+\begin{figure}[h!]
+\begin{minipage}{0.5\linewidth}
+$$ 
+   \eet = \dvd{r}{u_1} =\dvd{r}{x} = \var{1}{0}{0} 
+$$ 
+$$ 
+   \eto = \dvd{r}{u_2} =\dvd{r}{y} =  \var{0}{1}{0} 
+$$
+
+$$ 
+   \etr = \dvd{r}{u_3} =\dvd{r}{z} = \var{0}{0}{1} 
+$$
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+  \begin{center}
+    \begin{tikzpicture} 
+      \coordinate (o)  at (0,0,0);
+      \coordinate (p)  at (2,2,1);
+      \coordinate (x)  at (1,0,0);
+      \coordinate (y)  at (0,1,0);
+      \coordinate (z)  at (0,0,1);
+      \draw [->] (0,0) -- (0,0,2) node [below left] {$x$};
+      \draw [->] (0,0) -- (3,0,0) node [right] {$y$}; 
+      \draw [->] (0,0) -- (0,2,0) node [above] {$z$}; 
+      \draw [red] (o) -- (p);
+      \draw [dotted,red] (p) -- (2,0,1);
+      \draw [dotted,red] (2,0,1) -- (0,0,1);
+      \draw [dotted,red] (2,0,1) -- (2,0,0);
+      \fill (p) circle (1pt);
+
+      \pgfusepath{fill}
+    \end{tikzpicture}
+  \end{center}
+  \caption{\small The Cartesian coordinate system. Coordinates are given by $x,y,z$.}
+\end{minipage}
+\end{figure}
+
+
+
+
+and the metric tensor is
+$$
+   g_{ij} = \vec{e}_i\cdot\vec{e}_j=  \left( \begin{array}{ccc}
+                    1 & 0 & 0 \\
+                    0 & 1 & 0 \\
+                    0 & 0 & 1 
+                    \end{array} 
+             \right)
+$$
+Note that the metric tensor is constant and that all elements outside the diagonal are zero.
+This means that the distance between two points differing by $(dx, dy, dz)$ is
+
+$$
+   \Delta s = \sqrt{g_{11}dx^2 + g_{22}dy^2 + g_{33}dz^2} = \sqrt{dx^2 + dy^2 + dz^2}
+$$
+
+
+\section{Cylindrical coordinates}
+\label{sec:cylcoord}
+
+\myindx{Cylindrical coordinates} are defined as
+$$
+   \vec{r}(\rho,\theta,z) = (\rho\st, \rho\ct, z)
+$$
+With the following ranges for the coordinates
+$$\rho \ge  0,\quad 0\le\theta\le2\pi, \quad -\infty < z < \infty$$
+
+$$ \eet = \dvd{r}{u_1}=\dvd{r}{\rho}=  \var{\st}{\ct}{0} $$
+
+$$ \eto = \dvd{r}{u_2} =\dvd{r}{\theta} =  \var{\rho\ct}{-\rho\st}{0} $$
+
+$$ \etr = \dvd{r}{u_3}=\dvd{r}{z} =  \var{0}{0}{1}
+$$
+
+$$
+   g_{ij} = \vec{e}_i\cdot\vec{e}_j =  \left( \begin{array}{ccc}
+                    1  & 0      & 0 \\
+                    0  & \rho^2 & 0 \\
+                    0  & 0      & 1 
+                    \end{array} 
+             \right)
+$$
+
+and that 
+$$
+   \Delta s^2 = g_{11}d\rho^2 + g_{22}d\theta^2 + g_{33}dz^2 = d\rho^2 + \rho^2d\theta^2 + dz^2
+$$
+
+
+\section{\myindx{Spherical coordinates}}
+\label{sec:sphcoord}
+
+$$
+  \vec{r} = (x,y,z) = (r \stcp, r \stsp , r\cos\theta)
+$$
+
+Where the conventional ranges for the coordinates are
+
+$$
+   r\ge0, \quad 0\le\theta\le\pi, \quad 0\le\phi\le 2\pi
+$$
+
+The basis vectors are 
+
+\begin{minipage}{0.5\linewidth}
+$$
+    \eet =  \dvd{r}{r} = \var{\stcp}{\stsp}{\ct}
+$$
+$$
+     \eto =  \dvd{r}{\theta} = \var{r\ctcp}{r\ctsp}{-r\st}
+$$
+$$
+     \etr =  \dvd{r}{\phi} = \var{-r\stsp}{-r\stcp}{0}
+$$
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+    \begin{pspicture}(-2,2)(2,2) 
+      \pstThreeDCoor[xMax=2, yMax=2, zMax=2]
+      \pstThreeDDot[drawCoor=true](-1,1,1)
+     \pstThreeDLine(0,0,0)(-0.4,0.3,0.35)
+    \end{pspicture}
+\end{minipage}
+
+For this coordinate system the metric tensor can be calculated to 
+$$
+   g_{ij} = \vec{e}_i\cdot\vec{e}_j  = \left( \begin{array}{ccc}
+                    1 & 0 & 0 \\
+                    0 & r^2 & 0 \\
+                    0 & 0 & r^2\sin^2\theta
+                    \end{array} 
+             \right)
+$$
+
+
+$$
+   \Delta s^2 = g_{11}dr^2 + g_{22}d\theta^2 + g_{33}d\phi^2 = dr^2 + r^2d\theta^2 + r^2\sin^2\theta d\phi^2
+$$
+
+
+
+\section{Coordinate transformations}
+
+\newcommand{\pyt}{ \sqrt{x^2 + y^2 + z^2} }
+Since a point in space can be represented using any regular coordinate system we might find it useful to 
+change coordinate system, depending on the purpose. As a natural consequence the need for transforming between coordinate systems arise. 
+
+There exist general methods to transform back and forth between different coordinate systems but
+before revealing these a few select cases will be shown.
+
+
+
+\subsection{Translated Cartesian}
+
+The simpelst example of a coordinate system transformation is the translated cartesian coordinate system. The
+relations between the two coordinate systems are simply
+
+$$
+u_i =(x,y,z) = (x' +a, y' + b, z' + c) 
+$$
+and
+$$ 
+    u_i'=(x',y',z') = (x -a, y-b, z-c)
+$$
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[scale=2]
+  \draw[step=.25cm,mjcgrid] (-0.4,-0.24) grid (3.4,3.4);
+  \pgfsetlinewidth{1pt}
+
+  \coordinate (o)  at (0,0);
+  \coordinate (ox) at (2,0);
+  \coordinate (oy) at (0,2);
+  \coordinate (p)  at (1.5,2);
+
+  \draw [->] (o) -- (ox); 
+  \draw [->] (o) -- (oy); 
+  \draw [->,red] (1,1) -- (1,3); 
+  \draw [->,red] (1,1) -- (3,1); 
+  \pgfsetlinewidth{2pt}
+  \draw [->] (o) -- (1,0); 
+  \draw [->] (o) -- (0,1); 
+  \draw [->,red] (1,1) -- (1,2); 
+  \draw [->,red] (1,1) -- (2,1); 
+  \pgfsetlinewidth{1pt}
+  \fill (p) circle (1pt);
+  \fill (o) circle (1pt);
+
+  \node [right]  at (ox) {$\mathbf{x}$};
+  \node [below]  at (0.5,0) {$\vec{e}_x$};
+  \node [left]   at (0,0.5) {$\vec{e}_y$};
+  \node [above]  at (oy) {$\mathbf{y}$};
+  \node [left,red]  at (1,1.5) {$\vec{e}_x'$};
+  \node [below,red]  at (1.5,1) {$\vec{e}_y'$};
+
+  \node [right] at (1.5,2.125) {$(1.5,2)$};
+  \node [right,red] at (1.5,1.875) {$(0.5,1)$};
+ \end{tikzpicture}
+\end{center}
+\caption{\small Translated (red) cartesian coordinate system}
+\end{figure}
+
+\subsection{Rotated Cartesian to Cartesian}
+Now lets look at transformation between two cartesian coordinate systems. One is rotated $\alpha$ degrees relative to the other.
+$$
+    u_i = (x, y, z) = (r\ct, r\st, z)
+$$
+
+$$
+    u'_i = (x', y', z') = (r'\ct', r'\st', z')
+$$
+
+Where $r'=r, z'=z, \theta'=\theta-\alpha$
+
+\begin{center}
+\begin{tikzpicture}[scale=2]
+  \draw[step=.25cm,mjcgrid] (-1.4,-0.24) grid (3.4,3.4);
+  \pgfsetlinewidth{1pt}
+
+  \def\a{20}
+  \coordinate (o)  at (0,0);
+  \coordinate (ox) at (3,0);
+  \coordinate (oy) at (0,3);
+  \coordinate (p)  at (1,2);
+  \coordinate (c)  at (canvas polar cs:angle=\a,radius=3cm);
+  \coordinate (b)  at (canvas polar cs:angle=\a+90,radius=3cm);
+
+  \draw [->] (o) -- (ox); 
+  \draw [->] (o) -- (oy); 
+  \fill (p) circle (1pt);
+  \fill (o) circle (1pt);
+  \node [above right] at (p)  {$(x,y)=(1,2)$};
+
+  \draw [<->](2.25,0) arc (0:\a:2.25); 
+  \node [left] at(canvas polar cs:angle=\a/2,radius=2.25cm)  {$\alpha$};
+
+  \draw [->,red] (o) -- (c);
+  \draw [->,red] (o) -- (b);
+  \pgfsetlinewidth{0.75pt}
+  \draw [dotted,red] (p) -- ($(o)!(p)!(c)$);
+  \draw [dotted,red] (p) -- ($(o)!(p)!(b)$);
+  \draw [dotted] (p) -- (1,0.0); 
+  \draw [dotted] (p) -- (0,2); 
+  \pgfsetlinewidth{1pt}
+
+  \node [rotate=\a,left] at ($(o)!(p)!(b)$) {$y'$};
+  \node [rotate=\a,below] at ($(o)!(p)!(c)$) {$x'$};
+  \node [rotate=\a,right] at (c) {\textbf{x'}};
+  \node [rotate=\a,above] at (b) {\textbf{y'}};
+
+  \node [below]  at ($(o)!(p)!(ox)$)  {$x$};
+  \node [left]   at ($(o)!(p)!(oy)$)  {$y$};
+  \node [right]  at (ox) {$\mathbf{x}$};
+  \node [above]  at (oy) {$\mathbf{y}$};
+\end{tikzpicture}
+\end{center}
+
+Making use of the trigonometric identities
+
+$$
+   \sin(a+b) = \sin(a)\cos(b) + \cos(a)\sin(b)
+$$
+
+$$
+   \cos(a+b) = \cos(a)\cos(b) - \sin(a)\sin(b)
+$$
+
+We get the following transformations between the coordinate systems.
+
+$$
+   \var{x'}{y'}{z'} = \left( \begin{array}{ccc}
+          \cos\alpha & \sin\alpha & 0\\ 
+          -\sin\alpha & \cos\alpha & 0\\
+          0 & 0 & 1
+       \end{array}  \right)
+         \var{x}{y}{z} 
+$$
+and
+$$
+   \var{x}{y}{z} = \left( \begin{array}{ccc}
+          \cos\alpha & -\sin\alpha & 0\\ 
+          \sin\alpha & \cos\alpha & 0\\
+          0 & 0 & 1
+       \end{array}  \right)
+         \var{x'}{y'}{z'} 
+$$
+
+This seems right: When $\alpha$ is $0$ then $(x,y,z)=(x',y',z')$. 
+
+
+
+\subsection{Cartesian to Spherical}
+For example, the connection between Cartesian and Spherical coordinates is given as
+$$
+    u_i = \begin{pmatrix} x \\  y \\ z \end{pmatrix} = \begin{pmatrix} r\stcp \\ r\stsp \\ r\ct \end{pmatrix}
+$$
+
+and
+
+$$
+    u'_i = \begin{pmatrix} r \\ \theta \\ \phi \end{pmatrix} 
+         = \begin{pmatrix} \pyt \\ \arccos\left(\frac{z}{\pyt}\right) \\ \arcsin\left(\frac{y}{\sqrt{x^2+y^2}}\right) \end{pmatrix}
+$$
+The value for $\phi$ is only valid when $x \ge 0$, if not then the above value should be subtracted from $\pi$.
+
+\subsection{General Transformations}
+
+\fixme{I'm too tired now...}
+
+
+
+\myhrule
+\begin{myex}
+In the normal cartesian coordinate system $(x,y,z) = (5, 3, \pi)$, what are the coordinates in 
+a coordinate system rotated $30^\circ$ counter clockwise?
+
+$(x',y',z') = (5\cos(30)+3\sin(30), 3\cos(30) - 5\sin(30), \pi) \approx (5.83,0.098,\pi)$
+\end{myex}

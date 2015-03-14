@@ -1,0 +1,1 @@
+latex -shell-escape main.tex && makeindex main.idx && latex -shell-escape main.tex && dvipdf main.dvi

@@ -1,0 +1,110 @@
+%Vectors and Basis vectors
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\newcommand{\eet}{\vec{e}_1}
+\newcommand{\eto}{\vec{e}_2}
+\newcommand{\etr}{\vec{e}_3}
+\newcommand{\eets}{\eet\cdot\eet}
+\newcommand{\etos}{\eto\cdot\eto}
+\newcommand{\eetto}{\eet\cdot\eto}
+
+\newcommand{\vc}[3]{
+  \left( \begin{array}{c}
+  #1 \\ #2 \\ #3
+  \end{array} \right)
+}
+
+% Derivatives
+\newcommand{\dvd}[2]{\partial\vec{#1}/\partial#2}
+
+\newcommand{\dd}[2]{\frac{\partial #1}{\partial #2}}
+
+\newcommand{\drdt}{\dvd{r}{\theta}}
+\newcommand{\drdp}{\dvd{r}{\phi}}
+
+
+% Trigonometric
+\newcommand{\stsp}{\sin\theta\sin\phi}
+\newcommand{\stcp}{\sin\theta\cos\phi}
+\newcommand{\ctsp}{\cos\theta\sin\phi}
+\newcommand{\ctcp}{\cos\theta\cos\phi}
+\newcommand{\st}{\sin\theta}
+\newcommand{\ct}{\cos\theta}
+\newcommand{\sip}{\sin\phi}
+\newcommand{\cop}{\cos\phi}
+
+% Editorial
+\newcommand{\url}[1]{\mbox{\textbf{#1}}}
+\newcommand{\wiki}[1]{#1}
+\newcommand{\command}[1]{\$ \textbf{#1}}
+\newcommand{\addformula}[1]{
+\vspace{0.5cm}
+\fbox{Add: #1}
+\vspace{0.5cm}
+}
+\newcommand{\fixme}[1]{
+\vspace{0.5cm}
+\fbox{#1}
+\vspace{0.5cm}
+}
+\newcommand{\myhrule}{\rule{\linewidth}{0.5pt}}
+
+
+% TikZ macros
+\newcommand{\TikZ}{Ti\emph{k}Z~}
+\newcommand{\fsz}{\fontsize{12}{12}}
+
+\newcommand{\txfig}[4]{
+    \clip (#1-0.4,#2-0.4) rectangle (#3 + 0.4,#4 +0.4 );
+    \draw[step=.25cm,mjcgrid] (#1-0.4,#2-0.4) grid (#3 + 0.4,#4 +0.4 );
+    \pgfsetlinewidth{1pt}
+
+    \coordinate (o)  at ( 0, 0);
+    \coordinate (bx) at (#1, 0);
+    \coordinate (by) at ( 0,#2);
+    \coordinate (ex) at (#3, 0);
+    \coordinate (ey) at ( 0,#4);
+    \draw [->] (bx) -- (ex); 
+    \draw [->] (by) -- (ey); 
+
+    \node [right]  at (ex) {$x$};
+    \node [above]  at (ey) {$y$};
+    \foreach \x in {#1,...,#3} \draw[black!70] (\x cm,1pt) -- (\x cm,-1pt) node[anchor=north] {$\x$};
+    \foreach \y in {#2,...,#4} \draw[black!70] (1pt,\y cm) -- (-1pt,\y cm) node[anchor=east]  {$\y$};
+}
+
+
+\newenvironment{example}{%
+   \vspace{5mm}
+   \noindent\ignorespaces%
+    \textbf{Example:}\ }
+{\par\noindent% 
+     \ignorespacesafterend}
+
+
+\newcommand{\var}[3]{
+   \left( \begin{array}{ccc}
+   #1 \\ #2 \\ #3
+   \end{array} \right)
+}
+
+\newcommand{\myindx}[1]{\index{#1}#1}
+
+
+\newenvironment{wide}{%
+   \fontsize{6}{8}
+  \let\oldmarginparwidth\marginparwidth 
+  \setlength{\marginparwidth}{0pt}%
+}{%
+  \setlength{\marginparwidth}{\oldmarginparwidth}%
+}
+
+\newenvironment{twocol}[2]{%
+\begin{minipage}{0.5\linewidth}
+#1
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+#2
+\end{minipage}
+}
+{}

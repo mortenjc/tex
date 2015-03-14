@@ -1,0 +1,449 @@
+\newcommand{\lcs}{\Gamma}
+\newcommand{\mcs}[2]{\Gamma_{#1}^{#2}}
+
+\chapter{Tensor Examples}
+\label{sec:christoffel}
+
+In this section we will give some examples of the Christoffel symbols (of 
+both kinds) derived from specific coordinate systems. It will be demonstrated
+that depending on the metric tensor components there can be few or many of either 
+kind. 
+
+When working with tensors and their \myindx{derivatives}, such as the ones 
+needed for calculating the \myindx{Christoffel symbols}, it is very time 
+consuming to do these calculations by hand. 
+To demonstrate the complexity of this \myindx{algebraic manipulation} let us 
+calculate $\Gamma^2_{12}$ for the \myindx{spherical coordinates} described in section \ref{sec:sphcoord}.
+
+$$
+    \Gamma^2_{12} = \frac{1}{2} g^{2m} \left( \frac{\partial g_{m1}}{\partial u^2}  
+                 +\frac{\partial g_{m2}}{\partial u^1}
+                 -\frac{\partial g_{12}}{\partial u^m}
+       \right)
+$$
+
+since $u^1=r, u^2=\theta$, and $u^3=\phi$ we get, when summing over $m=1,2,3$
+
+$$
+  \begin{array}{llllll}
+    \Gamma^2_{12}  &= &\frac{1}{2} g^{21} \left( \frac{\partial g_{11}}{\partial \theta}  
+                 +\frac{\partial g_{12}}{\partial r}
+                 -\frac{\partial g_{12}}{\partial r} \right) +
+                 \frac{1}{2} g^{22} \left( \frac{\partial g_{21}}{\partial \theta}  
+                 +\frac{\partial g_{22}}{\partial r}
+                 -\frac{\partial g_{12}}{\partial \theta} \right) \\ 
+             &&+ 
+                 \frac{1}{2} g^{23} \left( \frac{\partial g_{31}}{\partial \theta}  
+                 +\frac{\partial g_{32}}{\partial r}
+                 -\frac{\partial g_{12}}{\partial \phi} \right) \\
+          & = &\frac{1}{2} g^{22}\frac{\partial g_{22}}{\partial r} = \frac{1}{2}\frac{1}{r^2}(2r) = \frac{1}{r}
+  \end{array}
+$$
+It turns out that all but one derivative of the metric tensor are zero, but this is not
+always the case! Note that there are $N^3$ Christoffel symbols, so in three dimensions we need to 
+do this 27 times performing $9*27=243$ derivatives!
+
+Clearly the possibility for errors is significant, so why not let a symbolic math program handle the 
+tiresome and error prone calculations? After all this has been done by professionals 
+since 1966 \cite{misner}.  The following examples were created using 
+\myindx{Maxima} \cite{maxima}. For source code examples see 
+section \ref{sec:maxima}.
+
+The Christoffel symbol of the first kind is defined as 
+
+$$
+    \Gamma_{ijk} = \frac{1}{2} \left( \frac{\partial g_{ik}}{\partial u^j}  
+                 +\frac{\partial g_{jk}}{\partial u^i}
+                 -\frac{\partial g_{ij}}{\partial u^k}
+       \right)
+$$
+and the Christoffel symbol of the second kind is 
+$$
+    \Gamma^k_{ij} = \frac{1}{2} g^{km} \left( \frac{\partial g_{mi}}{\partial u^j}  
+                 +\frac{\partial g_{mj}}{\partial u^i}
+                 -\frac{\partial g_{ij}}{\partial u^m}
+       \right)
+$$
+
+
+In the following we will calculate the Christoffel symbols of the first and second kind for 
+a number of coordinate systems using these formulae.
+
+
+\section{Cylindrical Coordinates}
+
+From section \ref{sec:cylcoord} we have
+
+$$
+   \vec{r}(\rho,\phi,z) = (\rho \cos(\phi), \rho \sin(\phi), z)
+$$
+
+and 
+
+
+
+\begin{eqnarray*}
+\lcs_{122}=&\rho, \qquad \lcs_{221}=&-\rho
+\end{eqnarray*}
+
+$$
+g^{ij} = \begin{pmatrix}
+   1 &      0          & 0\cr 
+   0 &\frac{1}{\rho^2} & 0\cr 
+   0 &      0          & 1\cr 
+\end{pmatrix}
+$$
+
+\begin{eqnarray*}
+\mcs{12}{2}=&\frac{1}{\rho}, \qquad \mcs{22}{1}=&-\rho
+\end{eqnarray*}
+
+
+\section{\myindx{Spherical Coordinates}}
+\label{sec:maxima_sph}
+
+Of the 27 potential Christoffel symbols of the first kind, only six are 
+nonzero and only three needs to be calculated due to symmetry properties.
+
+\begin{twocol}{
+\begin{eqnarray*}
+\lcs_{122}=&r \\
+\lcs_{133}=&r\,\cos ^2\theta \\
+\lcs_{221}=&-r \\
+\end{eqnarray*}}{
+\begin{eqnarray*}
+\lcs_{233}=&-r^2\,\cos \theta\,\sin \theta \\
+\lcs_{331}=&-r\,\cos ^2\theta \\
+\lcs_{332}=&r^2\,\cos \theta\,\sin \theta
+\end{eqnarray*}}
+\end{twocol}
+
+The inverse of $g_{ij}$ is
+
+$$ 
+    g^{ij}=\begin{pmatrix}1&0&0\cr 0&\frac{1}{r^2}&0\cr 0&0&\frac{1}{r^2\,\cos ^2
+ \theta}\cr \end{pmatrix}
+$$
+
+
+From this we can calculate the Christoffel symbols of second kind. 
+
+\begin{twocol}{
+\begin{eqnarray*}
+\mcs{12}{2}=&\frac{1}{r} \\
+\mcs{13}{3}=&\frac{1}{r} \\
+\mcs{22}{1}=&-r \\
+\end{eqnarray*}}{
+\begin{eqnarray*}
+\mcs{23}{3}=&-\frac{\sin \theta}{\cos \theta} \\
+\mcs{33}{1}=&-r\,\cos ^2\theta \\
+\mcs{33}{2}=&\cos \theta\,\sin \theta \\
+\end{eqnarray*}}
+\end{twocol}{
+
+
+\section{Ellipsoidal Coordinates}
+If we take the innocent spherical coordinates and change them in the following way
+
+$$
+   \vec{r}(u,v,w) = (a u \sin v \cos w, bu\sin v \sin w, c u \cos v)
+$$
+we get the \myindx{ellipsoidal coordinates}
+where $r$ has been replaced by $u$, $\theta$ by $v$ and $\phi$ by $w$ we get for the 
+metric tensor $g_{ij}=$
+
+
+\begin{wide}
+$$
+   \begin{pmatrix}
+
+  \sin^2v(b^2\sin ^2w+a^2\cos ^2w)+c^2\cos ^2v   &
+  u\cos v \sin v(b^2\sin ^2w+a^2\cos ^2 w-c^2)  &
+  \left(b^2-a^2\right)u\sin ^2v\cos w \sin w\cr 
+
+  u\cos v \sin v(b^2\sin ^2w+a^2 \cos ^2w-c^2)  &
+  u^2\cos^2v(b^2\sin ^2w+a^2\cos ^2w)+c^2u^2\sin ^2v  &
+  \left(b^2-a^2\right)u^2 \cos v\sin v\cos w\sin w\cr 
+
+  \left(b^2-a^2\right)u\sin ^2v \cos w\sin w   &
+  \left(b^2-a^2\right)u^2\cos v\sin v\cos w \sin w   &
+   a^2u^2\sin ^2v\sin ^2w+b^2u^2\sin ^2v\cos ^2w\cr 
+   \end{pmatrix}
+$$
+\end{wide}
+... and as you can see the page is barely wide enough to hold the result even with a tiny font!  But from
+Maxima we get the following 15 Christoffel symbols of the first kind
+
+\begin{eqnarray*}
+\Gamma_{121}=&\cos v\,\sin v\,\left(b^2\,\sin ^2w+a^2\,\cos ^2w
+ -c^2\right)\\
+\Gamma_{122}=&u\,\left(b^2\,\cos ^2v\,\sin ^2w+a^2\,\cos ^2v\,
+ \cos ^2w+c^2\,\sin ^2v\right)\\
+\Gamma_{123}=&\left(b-a\right)\,\left(b+a\right)\,u\,\cos v\,
+ \sin v\,\cos w\,\sin w\\
+\Gamma_{131}=&\left(b-a\right)\,\left(b+a\right)\,\sin ^2v\,
+ \cos w\,\sin w\\
+\Gamma_{132}=&\left(b-a\right)\,\left(b+a\right)\,u\,\cos v\,
+ \sin v\,\cos w\,\sin w\\
+\Gamma_{133}=&u\,\sin ^2v\,\left(a^2\,\sin ^2w+b^2\,\cos ^2w
+ \right)\\
+\Gamma_{221}=&-u\,\left(b^2\,\sin ^2v\,\sin ^2w+a^2\,\sin ^2v\,
+ \cos ^2w+c^2\,\cos ^2v\right)\\
+\Gamma_{222}=&-u^2\,\cos v\,\sin v\,\left(b^2\,\sin ^2w+a^2\,
+ \cos ^2w-c^2\right)\\
+\Gamma_{223}=&-\left(b-a\right)\,\left(b+a\right)\,u^2\,\sin ^2
+ v\,\cos w\,\sin w\\
+\Gamma_{231}=&\left(b-a\right)\,\left(b+a\right)\,u\,\cos v\,
+ \sin v\,\cos w\,\sin w\\
+\Gamma_{232}=&\left(b-a\right)\,\left(b+a\right)\,u^2\,\cos ^2v
+ \,\cos w\,\sin w\\
+\Gamma_{233}=&u^2\,\cos v\,\sin v\,\left(a^2\,\sin ^2w+b^2\,
+ \cos ^2w\right)\\
+\Gamma_{331}=&-u\,\sin ^2v\,\left(b^2\,\sin ^2w+a^2\,\cos ^2w
+ \right)\\
+\Gamma_{332}=&-u^2\,\cos v\,\sin v\,\left(b^2\,\sin ^2w+a^2\,
+ \cos ^2w\right)\\
+\Gamma_{333}=&-\left(b-a\right)\,\left(b+a\right)\,u^2\,\sin ^2
+ v\,\cos w\,\sin w\\
+\end{eqnarray*}
+
+You can verify that this seems reasonable by setting $a=b=c=1$ in which case many of these
+become zero and we are left with the six symbols from the Spherical coordinates. The formula
+for the inverse of the metric tensor is not given as it turns out to be quite big, but using
+Maxima we can calculate the Christoffel symbols of the second kind and there turns out to be six
+of these just as in the case of the Spherical coordinates.
+
+\begin{twocol}{
+\begin{eqnarray*}
+\Gamma_{12}^{2}=&{{1}\over{u}}\\
+\Gamma_{13}^{3}=&{{1}\over{u}}\\
+\Gamma_{22}^{1}=&-u\\
+\end{eqnarray*}}{
+\begin{eqnarray*}
+\Gamma_{23}^{3}=&{{\cos v}\over{\sin v}}\\
+\Gamma_{33}^{1}=&-u\,\sin ^2v\\
+\Gamma_{33}^{2}=&-\cos v\,\sin v\\
+\end{eqnarray*}}
+\end{twocol}
+
+
+\section{Other Coordinates}
+This coordinate system is taken from \cite{night} p. 11. It 
+probably does not have any practical applications, but it is the first
+example of a metric tensor where all components are nonzero.
+
+$$
+    \vec{r}(u,v,w) = (u+v, u-v, 2uv + w)
+$$
+
+$$
+   g_{ij} = \begin{pmatrix}
+               4v^2 +2 & 4uv & 2v \\
+               4uv & 4u^2 + 2 & 2u \\
+               2v & 2u & 1
+            \end{pmatrix}
+$$
+
+There are only three Christoffel symbols of the first kind
+\begin{eqnarray*}
+\lcs_{121}=&4v \\
+\lcs_{122}=&4u \\
+\lcs_{123}=&2
+\end{eqnarray*}
+
+The inverse of the metric tensor is
+
+$$
+   g^{ij} = \begin{pmatrix}
+               1/2  & 0  & -v \\
+               0 & 1/2 & -u  \\
+               -v & -u & 2v^2 + 2u^2+1 
+            \end{pmatrix}
+$$
+This means that we are left with only one Christoffel symbol of the second kind
+\begin{eqnarray*}
+\mcs{12}{3}=&2 \\
+\end{eqnarray*}
+
+\section{\myindx{Geodesics}}
+
+Why bother with all these Christoffel symbols? The reason is that in order to find
+the \myindx{equations of motions} in General Relativity we need to find the possible 
+patterns of movements (straight lines) and these are called Geodesics. There is a connection between
+Geodesics and the Christoffel symbols given by 
+
+$$
+    \frac{d^2u^i}{dt^2} + \Gamma_{jk}^i\frac{du^j}{dt}\frac{du^k}{dt} = 0
+$$
+
+Now let us take the Spherical coordinate system and find the Geodesic curves. First by
+noting that $u^i=u^1=r$,
+
+\begin{eqnarray}
+    \frac{d^2r}{dt^2} + \Gamma_{jk}^1\frac{du^j}{dt}\frac{du^k}{dt} = 0 \\
+    \frac{d^2r}{dt^2} + \Gamma_{22}^1(\dot{\theta})^2
+    + \Gamma_{33}^1(\dot{\phi})^2 = 0
+\end{eqnarray}
+here $u^i=u^2=\theta$,
+$$
+    \frac{d^2\theta}{dt^2} + \Gamma_{jk}^2\frac{du^j}{dt}\frac{du^k}{dt} = 0
+$$
+$$
+    \frac{d^2\theta}{dt^2} + \Gamma_{12}^2\dot{r}\dot{\theta}
+    + \Gamma_{33}^2(\dot{\phi})^2 = 0
+$$
+
+finally by setting $u^i=u^3=\phi$, we get
+\begin{eqnarray*} 
+    \frac{d^2\phi}{dt^2} + \Gamma_{jk}^3\frac{du^j}{dt}\frac{du^k}{dt} = 0 \\
+    \frac{d^2\phi}{dt^2} + \Gamma_{13}^3\dot{r}\dot{\phi}
+    + \Gamma_{23}^3\dot{\theta}\dot{\phi} = 0
+\end{eqnarray*}
+so the equations of motion are given by the three second-order differential
+equations
+\begin{eqnarray*} 
+    \ddot{r} -r\dot{\theta}^2 -r \cos^2\theta\dot{\phi}^2 = 0\\
+    \ddot{\theta} + \frac{1}{r}\dot{r}\dot{\theta}
+    + \cos\theta\sin\theta(\dot{\phi})^2 = 0 \\
+    \ddot{\phi} + \frac{1}{r}\dot{r}\dot{\phi}
+    - \frac{sin\theta}{\cos\theta}\dot{\theta}\dot{\phi} = 0
+\end{eqnarray*}
+This seems complicated, but let us see what it means in a simple case, where $\theta$ is 
+constant at $\theta_0$ and $r=1$. In this case the equations reduce to
+
+\begin{eqnarray}
+    -cos^2\theta_0\dot{\phi}^2 = 0\\
+    \ddot{\phi}  = 0
+\end{eqnarray}
+
+from the first equation we get $\theta_0=\pi/2$, and from the second equation we get
+$\phi(t) = at+b$.
+
+This means that the geodesic curves of constant $\theta$ and $r$ are great circles on the 
+equator.
+
+\fixme{Find a better (simpler) example?}
+
+\section{Higher dimensional spaces}
+\subsection{\myindx{Schwarzchild metric (4d)}}
+\label{sec:schwarz}
+An important metric in General Relativity is the Schwarzchild metric which is a topic in 
+section \ref{sec:4dcurves}. When the four coordinates are $t, r, \theta, \phi$, and 
+ $a=GM/c^2$ and spherical coordinates are used, its metric tensor is
+
+$$
+g_{ij}= 
+\begin{pmatrix}
+1-{{a}\over{r}}&0&0&0\cr 
+0&-{{1}\over{1-{{a}\over{r}}}}&0& 0\cr 
+0&0&-r^2&0\cr 0&0&0&-r^2\sin ^2\theta\cr 
+\end{pmatrix}
+$$
+
+The Christoffel symbols of the first kind are
+
+\begin{twocol}{
+\begin{eqnarray*}
+\Gamma_{112}=&{{ar-a^2}\over{2r^3}}\\
+\Gamma_{121}=&{{a}\over{2r^2-2ar}}\\
+\Gamma_{222}=&-{{a}\over{2r^2-2ar}}\\
+\Gamma_{233}=&{{1}\over{r}}\\
+\Gamma_{244}=&{{1}\over{r}}\\
+\end{eqnarray*}
+}{
+\begin{eqnarray*}
+\Gamma_{332}=&a-r\\
+\Gamma_{344}=&{{\cos \theta}\over{\sin \theta}}\\
+\Gamma_{442}=&\left(a-r\right)\sin ^2\theta\\
+\Gamma_{443}=&-\cos \theta\sin \theta\\
+\end{eqnarray*}
+}
+\end{twocol}
+
+and the inverse metric tensor is 
+$$
+g^{ij} = 
+\begin{pmatrix}
+{{1}\over{1-{{a}\over{r}}}}&0&0&0\cr 0&{{a}\over{r}}-1&0&0
+ \cr 0&0&-{{1}\over{r^2}}&0\cr 0&0&0&-{{1}\over{r^2\sin ^2\theta
+ }}\cr 
+\end{pmatrix}
+$$
+
+and the Christoffel symbols of the second kind are given as 
+
+\begin{twocol}{
+\begin{eqnarray*}
+\Gamma_{11}^{2}=&-{{a}\over{2r^2}}\\
+\Gamma_{12}^{1}=&{{a}\over{2r^2}}\\
+\Gamma_{22}^{2}=&{{a}\over{2\left(1-{{a}\over{r}}\right)^2r^2 }}\\
+\Gamma_{23}^{3}=&-r\\
+\end{eqnarray*}}
+{
+\begin{eqnarray*}
+\Gamma_{24}^{4}=&-r\sin ^2\theta\\
+\Gamma_{33}^{2}=&r\\
+\Gamma_{34}^{4}=&-r^2\cos \theta\sin \theta\\
+\Gamma_{44}^{2}=&r\sin ^2\theta\\
+\Gamma_{44}^{3}=&r^2\cos \theta\sin \theta\\
+\end{eqnarray*}}
+\end{twocol}
+
+\subsection{\myindx{Kaluza-Klein metric (5d)}}
+A space of five dimensions were contrieved in a unification theory by Kaluza and Klein.
+Several variations of the theme exist, but the following is an example from \cite{art:tiwari} where
+the  metric tensor is
+
+
+$$
+ \hat{g}_{\hat{\mu}\hat{\nu}} = 
+     \begin{pmatrix}
+         1  &  0  &  0   &  0                 & 0 \\
+         0  & -A^2(t)  &  0   &  0                 & 0 \\
+         0  &  0  & -A^2(t)r^2 &  0                 & 0 \\
+         0  &  0  &  0   & -A^2(t)r^2\sin^2\theta & 0 \\
+         0  &  0  &  0   &  0                 & -B^2(t) 
+    \end{pmatrix} 
+$$
+the inverse of the metric tensor is 
+$$
+ \hat{g}^{\hat{\mu}\hat{\nu}} = 
+     \begin{pmatrix}
+         1  &  0  &  0   &  0                 & 0 \\
+         0  & -\frac{1}{A^2(t)}  &  0   &  0                 & 0 \\
+         0  &  0  & -\frac{1}{A^2(t)r^2} &  0                 & 0 \\
+         0  &  0  &  0   & -\frac{1}{A^2(t)r^2\sin^2\theta} & 0 \\
+         0  &  0  &  0   &  0                 & -\frac{1}{B^2(t)} 
+    \end{pmatrix} 
+$$
+and the Christoffel symbols of the second kind are
+
+
+
+\begin{twocol}{
+\begin{eqnarray*}
+\Gamma_{12}^{2}=&\frac{\dot{A}}{A}\\
+\Gamma_{13}^{3}=&\frac{\dot{A}}{A}\\
+\Gamma_{14}^{4}=&\frac{\dot{A}}{A}\\
+\Gamma_{15}^{5}=&\frac{\dot{B}}{B}\\
+\Gamma_{22}^{1}=&A\dot{A}\\
+\Gamma_{23}^{3}=&\frac{1}{r}\\
+\Gamma_{24}^{4}=&\frac{1}{r}
+\end{eqnarray*}
+}{
+\begin{eqnarray*}
+\Gamma_{33}^{1}=&r^2A\dot{A}\\
+\Gamma_{33}^{2}=&-r\\
+\Gamma_{34}^{4}=&\frac{\cos\theta}{\sin\theta}\\
+\Gamma_{44}^{1}=&r^2\sin^2\theta A\dot{A}\\
+\Gamma_{44}^{2}=&-r\sin^2\theta\\
+\Gamma_{44}^{3}=&-\cos\theta\sin\theta\\
+\Gamma_{55}^{1}=&B\dot{B}
+\end{eqnarray*}}
+\end{twocol}
+which is not too bad considering that there could have been $5^3=125$!. Note that the symbols depend 
+on the choice of the functions $A(t)$ and $B(t)$ and their
+derivatives. The functions would have to be found as a solution to the Einstein field equations,
+but one could assume a form of the functions and then calculate the consequences for 
+\myindx{cosmology}.
+

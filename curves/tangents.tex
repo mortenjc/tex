@@ -1,0 +1,49 @@
+\section{Tangents}
+
+We have seen that a function has associated with it a $y$-value for every $x$-value. But curves have other 
+properties. For example the slope varies with $x$ and this slope is called the \myindx{tangent} 
+of the curve, and we can calculate the slope when we know the function.
+For functions of the type $y=f(x)$, the slope is defined naturally as the 
+small changes in the $y$-direction caused by a small change in $x$. This is 
+called the \myindx{derivative} of the function. There are several ways of denoting the 
+derivative of a function $y=f(x)$: 
+
+$$
+    slope = \dd{f(x)}{x} = f'(x) = f' = y' = \dd{y}{x}
+$$ 
+and if the variable is measuring time, $t$ as in $y=g(t)$ the derivatime is
+sometimes denoted $\dot{g}(t)$ or $\dot{g}$.
+
+When the function is parametrized $(x,y)=(f(t),g(t))$, we differentiate each
+function and obtain a \myindx{tangent vector}.
+
+$$
+     \vec{v}_t = \begin{pmatrix} f'(t) \\ g'(t) \end{pmatrix}
+$$
+
+\begin{figure}[h]
+\begin{center}
+\begin{tikzpicture}[scale=2]
+    \txfig{0}{-0.5}{3.2}{1.4}
+    \draw[very thick,color=blue, domain=0:3.1416,smooth] plot[prefix=pgffigs/mjc,id=tangent] function{sin(3*x)/(x**2 +1)};
+    \pgfsetlinewidth{0.75pt}
+    \draw[red, ->] (0,0) -- +(0.158,0.474);
+    \fill (0,0) circle (1pt);
+
+    \draw[red, ->] (0.5,0.798) -- +(0.453,-0.212);
+    \fill (0.5,0.798) circle (1pt);
+
+    \draw[red, ->] (0.785,0.437) -- +(0.249,-0.433);
+    \fill (0.785,0.437) circle (1pt);
+
+    \draw[red, ->] (1.571,-0.288) -- +(0.484,0.126);
+    \fill (1.571,-0.288) circle (1pt);
+
+    \draw[red, ->] (2.356,0.108) -- +(0.486,0.120);
+    \fill (2.356,0.108) circle (1pt);
+
+    \node[right] at (2.0,1.2) {\Large $y=\frac{\sin(3x)}{x^2 +1}$};
+\end{tikzpicture}
+\caption{\small A curve and its tangent vectors at selected points. }
+\end{center}
+\end{figure}

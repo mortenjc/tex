@@ -1,0 +1,1 @@
+latex hdr3.tex && dvipdf hdr3.dvi

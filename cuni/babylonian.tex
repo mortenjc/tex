@@ -1,0 +1,34 @@
+\documentclass[paper=a4]{minimal}
+
+\usepackage{pgffor}
+\usepackage{babyloniannum}
+
+
+\begin{document}
+
+\begin{minipage}{0.2\textwidth}
+\noindent\foreach \n in {1,...,40}{%
+\n\quad\babyloniannum{\n}\\
+}
+\end{minipage}
+\begin{minipage}{0.2\textwidth}
+\noindent\foreach \n in {41,...,80}{%
+\n\quad\babyloniannum{\n}\\
+}
+\end{minipage}
+\begin{minipage}{0.2\textwidth}
+\noindent\foreach \n in {81,...,120}{%
+\n\quad\babyloniannum{\n}\\
+}
+\end{minipage} \hfill
+
+
+424000 is \babyloniannum{424000}
+
+21609 is \babyloniannum{21609}
+
+123456789 is \babyloniannum{123456789}
+
+\end{document}
+
+

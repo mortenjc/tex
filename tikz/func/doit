@@ -1,0 +1,1 @@
+latex --shell-escape functions.tex && dvipdf functions.dvi

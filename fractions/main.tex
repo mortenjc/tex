@@ -1,0 +1,125 @@
+\documentclass{article}
+\usepackage[danish,english]{babel}
+\usepackage{inputenc}
+\usepackage[table]{xcolor}
+\usepackage{colortbl}
+\usepackage{amsmath,amsthm,booktabs}
+\usepackage[pdftex]{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{calc,through,decorations.fractals,plotmarks}
+
+\newcommand\QED{$\mathcal{Q.E.D}$}
+\newcommand\mytablecolor{\rowcolors{1}{pink}{white}}
+
+
+\newenvironment{twocol}[2]{%
+\begin{minipage}{0.5\linewidth}
+#1
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+#2
+\end{minipage}
+}
+{}
+
+\newtheorem{theorem}{Theorem}
+
+\begin{document}
+
+\section{The approximation of algebraic irrational numbers and Liouville's transcendental numbers}
+Suppose that
+
+\begin{equation}
+     f(x) = a_0 + a_1x + \cdots + a_nx^n   \label{polyn}
+\end{equation}
+is a polynomial of degree $n$ with {\em integral} coefficients $a_0, a_1, \cdots, a_n$. Then,
+a root, $\alpha$, of this polynomial is said to be {\em algebraic}. Since every rational
+number $\alpha = a/b$ can be defined as the root of the first-degree equation
+$bx-a = 0$, the concept of an algebraic number is clearly a natural generalization of the concept of 
+a rational number. If a given algebraic number satifies an equation $f(x)=0$ of degree $n$, and does
+not satisfy any equation of lower degree (with integral coefficients), it is called an algebraic number of degree
+$n$. In particular, rational numbers can be defined as first-degree algebraic numbers. The number
+$\sqrt{2}$, being a root of the polynomial $x^2 -2$, is a second-degree algebraic number, or, 
+as we say, a quadratic irrational. Cubic, fourth-degree, and higher irrationals are defined analogously. All
+non-algebraic numbers are said to be {\em transcendental}. Examples of transcendental numbers
+are $e$ and $\pi$. Because of the great role that algebraic numbers play in contemporary number theory,
+many special studies have been devoted to the question of their properties with regard to their
+approximation by rational fractions. The first noteworthy result in this direction was the following theorem, known as Liouville's
+theorem.
+
+\begin{theorem} \label{liouville}
+For every real irrational algebraic number $\alpha$ of degree $n$,
+there exists a positive number $C$ such that, for arbitrary integers $p$ and $q \; (q>0)$,
+
+\begin{equation*}
+   \left| \alpha - \frac{p}{q} \right| >  \frac{C}{q^n}
+\end{equation*}
+\end{theorem}
+
+\begin{proof}
+Suppose that $\alpha$ is a root of the polynomial (\ref{polyn}). From algebra,
+we may write
+\begin{equation}
+     f(x) = (x- \alpha)f_1(x),   \label{rootoff}
+\end{equation}
+where $f_1(x)$ is a polynomial of degree $n-1$. Here,  $f_1(\alpha) \ne 0$. To show this, suppose that
+$f_1(\alpha) = 0$. Then, the polynomial $f_1(x)$ could be
+divided (without a reminder) by $x-\alpha$ and, hence, the polynomial $f(x)$ could be divided by
+$(x-\alpha)^2$. But, then, the derivative $f'(x)$ could be divided by $x-\alpha$; that is, we would have $f'(\alpha) = 0$, 
+which is impossible since $f'(x)$ is a polynomial of degree $n-1$ with integral 
+coefficients and $\alpha$ is an algebraic number of degree $n$. Hence, $f_1(\alpha) \ne 0$,
+and, consequently, we can find a positive number $\delta$ such that
+
+\begin{equation*}
+    f_1(x) \ne 0   \qquad \qquad  (\alpha - \delta \leq  x \leq \alpha + \delta).
+\end{equation*}
+
+Suppose that $p$ and $q \; (q>0)$, are an arbitrary pair of integers. If
+$|\alpha -(p/q)| \leq \delta$, then $f_1(p/q) \neq 0$, and, by substituting $x= p/q$ in identity (\ref{rootoff}), we obtain
+
+\begin{eqnarray*}
+    \frac{p}{q} - \alpha  & = & \frac{f\left(\frac{p}{q} \right)  }   { f_1\left( \frac{p}{q} \right)     } =
+   \frac {
+       a_0 + a_1 \left( \frac{p}{q}\right) + \cdots  +  a_n \left( \frac{p}{q}\right)^n
+   }{
+       f_1\left( \frac{p}{q} \right)   
+   }  \\
+  & = & \frac{
+                a_0q^n + a_1pq^{n-1} + \cdots + a_np^n
+            }{
+                q^nf_1\left( \frac{p}{q}\right)
+            }.
+\end{eqnarray*}
+
+The numerator of this fraction is an integer. It is also non-zero, because otherwise we would have $\alpha = p/q$, whereas
+$\alpha$ is by hypothesis irrational. Consequently, this numerator is at least equal to unity in absolute value. We denote
+by $M$ the least upper bound of the function $f_1(x)$ in the interval $(\alpha -\delta, \alpha + \delta)$. From the last 
+inequality, we thus obtain
+
+\begin{equation*}
+   \left | \alpha - \frac{p}{q} \right | \ge  \frac{1}{Mq^n}.
+\end{equation*}
+
+In the event that 
+\begin{equation*}
+   \left | \alpha - \frac{p}{q} \right| > \delta ,
+\end{equation*}
+it follows that 
+
+\begin{equation*}
+   \left| \alpha - \frac{p}{q} \right| >  \frac{\delta}{q^n} ,
+\end{equation*}
+and if we now denote by $C$ any positive number less than $\delta$ and $1/M$,
+we obtain, in both cases (that is, for arbitrary $q>0$ and $p$),
+
+\begin{equation*}
+   \left| \alpha - \frac{p}{q} \right| >  \frac{C}{q^n},
+\end{equation*}
+which completes the proof of Theorem \ref{liouville}.
+
+\end{proof}
+
+
+
+\end{document}

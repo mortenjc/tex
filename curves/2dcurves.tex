@@ -1,0 +1,152 @@
+
+\chapter{2D Curves}
+\label{sec:2dcurves}
+
+In this chapter we will start by showing the familiar functions of one variable $y=f(x)$. We will quickly
+find out that these are somewhat limited in the variety of shapes they can express, 
+which leads onwards to the more general parametric 2D curves.
+
+\section{Functions of one variable}
+\label{sec:simplefuncs}
+
+A function of one variable, $y=f(x)$ simply connects pairs of numbers: For each $x$ there is a corresponding $y$.
+Functions of one variable are suitable for representing simple relations where the $x$ values
+are increasing continuously (time, days, months, ...). This means that we cannot use this method to draw
+geometry such as circles, ellipses and other closed or self intersecting shapes shown in 
+figures \ref{fig-circle2d} and \ref{fig-intersect}.
+
+\begin{figure}[h]
+\begin{tikzpicture}[scale=1.5]
+   \txfig{0}{0}{3.25}{2.25}
+   \draw[domain=0:2.5,smooth,red] plot[parametric,prefix=pgffigs/mjc,id=line] function{t,t};
+   \draw[domain=0:2.5,smooth,blue] plot[parametric,prefix=pgffigs/mjc,id=parabola] function{t,(t-1)**2};
+   \node [left,red]  at (2.0,2.15) {\fsz $y=x$};
+   \node [left,blue] at (3.5,0.75) {\fsz $y=(x-1)^2$};
+\end{tikzpicture}
+\caption{\small Two simple functions of the single variable $x$.}
+\label{fig-simple2d}
+\end{figure}
+
+\index{length of!a curve}
+The length of a curve specified as y=f(x) is
+
+$$
+  \int_a^b\sqrt{(dx)^2 + (\frac{\partial y}{\partial x}dx)^2}=\int_a^b\sqrt{1+(y')^2}dx
+$$
+
+The formula can be understood in terms of \myindx{Pythagoras formula} for small changes in $x$ and $y$:  If  
+we increment $x$ by $dx$ from $x_0$ to $x_0 + dx$ the corresponding change in $y$, $dy$ is the rate
+that $y$ changes with $x$, $\partial y/\partial x$ evaluated at $x_0$,
+multiplied with $dx$. The total length is then the \myindx{hypotenuse}
+of the right angle triangle with sides $dx$ and $dy$, which is $\sqrt{(dx)^2 + (dy)^2}$. This is 
+illustrated in figure \ref{fig-delta_l}.
+Integrating this formula over the interval of interest gives the total length of the 
+curve.
+
+
+\begin{figure}[h]
+\begin{center}
+\begin{tikzpicture}[scale=5]
+   \txfig{1.25}{.5}{2.5}{0.75}
+   \draw[domain=1:2.25,line width=1.5pt,smooth,blue] plot[parametric,prefix=pgffigs/mjc,id=parabola2] function{t,(t-1)**2};
+   \node [left] at (1.5,1.0) {\fsz $y=(x-1)^2$};
+   \node [left] at (1.5,.8) {\fsz $\frac{\partial y}{\partial x}=2(x-1)$};
+   \draw [black] (1.5,0.25) -- (2.0,.25) ; % dx
+   \node [black, below] at (1.75,0.28) {\fsz $dx$};
+
+   \draw [black] (2.0,0.25) -- (2.0,1.0) ; % dy
+   \node [black, right] at (2,0.5) {\fsz $dy\approx 2(x-1)dx$};
+
+   \draw [black] (1.5,0.25) -- (2.0,1.0) ;
+\end{tikzpicture}
+
+\caption{\small The length of a small curve segment can be found by Pythagoras' equation. The 
+approximation becomes better as $dx$ gets smaller.}
+\label{fig-delta_l}
+\end{center}
+\end{figure}
+
+
+\section{Parametric Curves}
+
+We now introduce \myindx{parametric curves}. Instead of letting $y$ vary as a function $f(x)$ we now 
+let both $x$ and $y$ depend on $t$. This can be visualized by imagining an 'o' drawn with a pen. 
+As the pen draws a circle (counter clockwise, starting from the top) you can imagine how the $x$ and $y$ coordinates vary:
+First $x$ decreases while $y$ barely changes, then both $x$ and $y$ are decreasing. When we reach the bottom of
+the 'o' $x$ is increasing while $y$ only moves slightly, etc. As it takes some time to draw the 'o'
+each point is drawn at a certain moment of time, or simply that $\vec{r}(t)= \Big( x(t), y(t) \Big)$.
+Let's give some examples. 
+
+The straight line $y=ax+b$ is parametrized as $(t, at+b)$
+
+The curve  given by $y=\sin(x)$ is parametrized by $(t, \sin(t))$
+
+And the general case $y=f(x)$ is parametrized as $(t, f(t))$.\\
+
+So far we have just covered the functions mentioned earlier, but now we can also let the x-coordinate 
+vary. For example $(\sin(t),\cos(t))$ draws a circle with radius 1 and center (0,0). For further examples 
+see figures \ref{fig-circle2d} and \ref{fig-intersect}.
+
+
+
+\begin{figure}
+  \begin{tikzpicture}[scale=2]
+    \txfig{0}{0}{3.25}{2.5}
+    \draw[domain=-3.141:3.141,smooth,red] plot[parametric,prefix=pgffigs/mjc,id=circle] 
+            function{1.5+cos(t),1.25+sin(t)};
+    \draw[domain=-3.141:3.141,smooth,green!50!black!90] plot[parametric,prefix=pgffigs/mjc,id=sloejfe] 
+            function{1.5+cos(t),1.25+sin(t)*cos(t)};
+    \node [right] at (.25,2.7) {\fsz $(1.5+\cos t, 1.25+\sin t)$};
+    \draw [red] (0.05,2.7) -- (0.249, 2.7);
+    \node [right] at (.25,2.4) {\fsz $(1.5+\cos t, 1.25+\sin t\cos t)$};
+    \draw [green!50!black!90] (0.05,2.4) -- (0.249, 2.4);
+  \end{tikzpicture}
+
+  \caption{\small Circle with radius 1 and center $(1.5,1.25)$ (red) and a self intersecting curve (green).}
+  \label{fig-circle2d}
+\end{figure}
+
+
+\begin{figure}
+\begin{tikzpicture}[scale=2]
+   \txfig{0}{0}{3.25}{2.25}
+   \draw[domain=-3.141:3.141,smooth,red] plot[parametric,prefix=pgffigs/mjc,id=intersect] 
+            function{1.5+t*cos(t)/2,0.75+t*sin(t)/2};
+   \node [left] at (3.5,2.4) {\fsz $(\frac{3}{2}+\frac{t}{2}\cos t, \frac{3}{4}+\frac{t}{2}\sin t)$};
+   \fill (1.5,0.75) circle (1pt); 
+   \fill (1.5 + 3.141/2 ,0.75) circle (1pt); 
+   \fill (1.5 - 3.141/2 ,0.75) circle (1pt); 
+   \node [below] at (1.5,.75) {\fsz $t=0$};
+   \node [below] at (1.5+3.141/2,.75) {\fsz $t=\pi$};
+   \node [below] at (1.5-3.141/2,.75) {\fsz $t=-\pi$};
+\end{tikzpicture}
+\caption{\small Self intersecting curve showing the points created at $t=-\pi,0$ and $\pi$ respectively. 
+$t \in [-\pi;\pi]$}
+\label{fig-intersect}
+\end{figure}
+
+
+
+The length of curves specified as (x,y)=(f(t),g(t)) is given in a similar way as for the simple 
+curves mentioned in section \ref{sec:simplefuncs} as we again use Pythagoras. Using the relation
+
+$$
+   \Big(\dd{x}{t}dt\Big)^2 + \Big(\dd{y}{t}dt\Big)^2 = \Big(\dot{f(t)}dt\Big)^2 +  \Big(\dot{g(t)}dt\Big)^2
+$$
+we get for the length of the curve 
+\begin{equation} \label{eq:length}
+  \mathcal{L} = \int_a^b\sqrt{(dx)^2 + (dy)^2} = 
+  \int_a^b\sqrt{(\dot{f})^2 + (\dot{g})^2}dt
+\end{equation}
+
+Finally we should mention the parameter $t$. If no limits are specified then we assume that $t$ can take 
+the values from $-\infty < t < \infty$. Sometimes, as in the case of the circle this would create 
+endless loops around the same curve. In such cases an interval can be specified as $t \in [0;2\pi]$,
+meaning that $t$ runs from $0$ to $2\pi$.
+
+\fixme{ Much more can be said about} parametric curves: The speed of traversal,
+slopes, asymptotic behavior, turning points, intersection with axes, ...
+
+\input{tangents}
+\input{curvature_I}
+\input{3dcurves}

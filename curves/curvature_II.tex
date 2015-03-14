@@ -1,0 +1,78 @@
+\chapter{Curvature}
+
+In this chapter we will give the formulae for working with
+curvatures. This part is filled with symbols which makes it somewhat hard
+to comprehend. Just consider the symbols as functions which can be
+calculated from the metric tensor. 
+
+\index{curvature!Gaussian}
+\section{\myindx{Gaussian Curvature}}
+Gauss' curvature formula describes the curvature of a two dimensional
+surface parametrized by $(u,v)$.
+
+
+$$
+K = -\frac{1}{g_{11}} \left( \frac{\partial}{\partial u}\Gamma_{12}^2 - \frac{\partial}{\partial v}\Gamma_{11}^2 + \Gamma_{12}^1\Gamma_{11}^2 - \Gamma_{11}^1\Gamma_{12}^2 + \Gamma_{12}^2\Gamma_{12}^2 - \Gamma_{11}^2\Gamma_{22}^2\right)
+$$
+
+\section{Riemann curvature tensor}
+\index{Riemann tensor} 
+\index{curvature!Riemann}
+
+The Riemann curvature tensor is a tensor of the fourth order, which 
+is defined in the following way
+$$
+{R^\rho}_{\sigma\mu\nu} = \partial_\mu\Gamma^\rho_{\nu\sigma}
+    - \partial_\nu\Gamma^\rho_{\mu\sigma}
+    + \Gamma^\rho_{\mu\lambda}\Gamma^\lambda_{\nu\sigma}
+    - \Gamma^\rho_{\nu\lambda}\Gamma^\lambda_{\mu\sigma}
+$$
+
+\section{Ricci curvature tensor}
+\index{curvature!Ricci}
+The \myindx{Ricci tensor} is related to the Riemann curvature 
+tensor by contracting two indices
+$$
+   R_{\sigma\nu} = {R^\rho}_{\sigma\rho\nu} =
+{\Gamma^\rho_{\nu\sigma}}_{,\rho} - \Gamma^\rho_{\rho\sigma ,\nu}
++ \Gamma^\rho_{\rho\lambda} \Gamma^\lambda_{\nu\sigma}
+- \Gamma^\rho_{\nu\lambda}\Gamma^\lambda_{\rho\sigma}
+$$
+
+
+\myhrule
+\begin{myex}
+For the spherical surface with unit length the only nonzero Christoffel
+symbols are
+\begin{eqnarray*}
+   \Gamma^2_{12} &=& \;\;\frac{\cos\theta}{\sin\theta} \\
+   \Gamma^1_{22} &=& -\cos\theta\sin\theta
+\end{eqnarray*}
+of which only $\Gamma^2_{12}$ appears in Gauss' formula.
+Noting that $g_{11}=1$, the Gaussian curvature is then
+
+$$
+    K = -\frac{d}{d\theta}\frac{\cos\theta}{\sin\theta} - \left( \frac{\cos\theta}{\sin\theta} \right)^2 = 1
+$$
+which shows that the sphere has a constant, positive curvature.
+\end{myex}
+
+
+\begin{myex}
+A for the hyperbolic paraboloid, the  nonzero Christoffel symbols are
+\begin{eqnarray*}
+   \Gamma_{11}^1 &=&  \;\;\frac{4u}{4v^2+4u^2+1} \\ 
+   \Gamma_{11}^2 &=& -\frac{4v}{4v^2+4u^2+1} \\ 
+   \Gamma_{22}^1 &=& -\frac{4v}{4v^2+4u^2+1} \\ 
+   \Gamma_{22}^2 &=& \;\;\frac{4v}{4v^2+4u^2+1} 
+\end{eqnarray*}
+the gaussian formula reduces to
+$$
+   K = \frac{1}{g_{11}} \left(\frac{d}{dv}\Gamma_{11}^2 + \Gamma_{11}^2\Gamma_{22}^2 \right)
+     = -\frac{4}{(4v^2+4u^2+1)^2}
+$$
+The Gaussian curvature is now a function of $u$, and $v$,
+and we see that this surface has negative curvature everywhere with a minimum
+occuring at $(u,v)=(0,0)$, where it has the value $-4$.
+\end{myex}
+

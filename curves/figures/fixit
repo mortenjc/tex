@@ -1,0 +1,10 @@
+#!/bin/bash
+
+CMD=`find . -name "*.eps"`
+
+for i in $CMD
+do
+   echo fixing bbox in $i
+   eps2eps $i tmp.eps
+   mv tmp.eps $i
+done

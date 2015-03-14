@@ -1,0 +1,7 @@
+def n_toroid_segs 20 
+def n_circle_segs 16
+def r_minor 1 
+def r_major 1.5
+   sweep { n_toroid_segs, rotate(360 / n_toroid_segs, [0,1,0]) }
+   sweep { n_circle_segs, rotate(360 / n_circle_segs, (r_major,0,0)) }
+      (r_major + r_minor, 0)

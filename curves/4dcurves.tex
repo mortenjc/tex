@@ -1,0 +1,159 @@
+\chapter{Curves in higher dimensions}
+\label{sec:4dcurves}
+
+There is no reason to stop at 3D as mathematics do not
+place any limits on curves.
+
+In fact General Relativity operates with the notion of \myindx{spacetime} which 
+is a four dimensional construction, and in other areas of physics
+even higher dimensions are used. \myindx{String theory} which tries to 
+unite the four fundmental forces operates with dimensions of 10 and
+upwards. Moving to higher dimensions, however, presents some difficulties as 
+1) the metric tensor has higher dimensionality and hence more terms and 
+cross terms to evaluate. 2) For dimensions higher than 3 graphical visualization
+is impossible.
+
+
+\section{Spacetime}
+Spacetime is the incorporation of time as a fourth coordinate into three dimensional space.
+$$
+    u_\nu = (x_0, x_1, x_2, x_3) = (ct, -x, -y, -z)
+$$
+With the metric tensor
+\index{metric tensor!spacetime}
+$$
+   g_{\mu\nu} = \begin{pmatrix}
+       c &  0 &  0 &  0 \\ 
+       0 & -1 &  0 &  0 \\ 
+       0 &  0 & -1 &  0 \\ 
+       0 &  0 &  0 & -1 \\ 
+   \end{pmatrix} 
+$$
+and a the distance between nearby points is $\Delta s^2 = c^2dt^2 - dx^2 - dy^2 - dz^2$.
+
+Note that since all elements of $g$ are constant, all Christoffel symbols are $0$, this space
+is flat!
+
+
+\section{\myindx{Schwarzchild Metric}}
+The Schwarzchild metric is a specific solution to Einsteins field equations for gravitation
+around a massive object in empty space given spherical symmetry. Examples of the derivation
+of this metric are given in \cite{night} and \cite{padman}.
+
+\index{metric tensor!Schwarzchild}
+$$
+   g_{\mu\nu} = \begin{pmatrix}
+        1 - 2MG/c^2r & 0                  &   0  & 0     \\
+        0            & -(1-2MG/c^2r)^{-1} &   0  & 0     \\
+        0            &                    & -r^2 & 0     \\
+        0            &         0          &   0  & -r^2\sin^2\theta 
+      \end{pmatrix}
+$$
+the Christoffel symbols for this metric are given in section \ref{sec:schwarz}.
+
+
+\begin{figure}
+\begin{center}
+\psset{unit=0.75} 
+\begin{pspicture}(-5.5,-7)(4.5,4) 
+  \psset[pst-solides3d]{viewpoint=20 120 30 rtp2xyz, Decran=50,lightsrc=10 125 20 rtp2xyz}
+  % Parametric Surfaces
+  \defFunction{hole}(u,v) 
+      {u} 
+      {v} 
+      { 1 neg u dup mul v dup mul add 0.2 add div}
+  \defFunction{curve}(t) 
+      {t Cos 3 mul 1.5 sub} 
+      {t Sin 3 mul 1.5 add} 
+%      { 0}
+      { 1 neg t Cos 3 mul 1.5 sub dup mul t Sin 3 mul 1.5 add dup mul add 0.2 add div}
+  \psSolid[object=surfaceparametree, linecolor=black!70, base=3 neg 3 3 neg 3, 
+         fillcolor=blue!50,incolor=black!90, function=hole,linewidth=0.5\pslinewidth,ngrid =30]% 
+      \psSolid[object=courbe, r=0, range= 0.5 2.05 neg , action=draw*, linecolor=black, 
+               linewidth=0.05,resolution=360, function=curve]
+\end{pspicture}
+\end{center}
+\vspace{1cm}
+\begin{center}
+ \caption{\small Curvature of space near a massive object.}
+\end{center}
+\end{figure}
+
+
+\section{\myindx{Kerr Metric}}
+For a rotating massive object the metric tensor is a further generalization of the Schwarzchild 
+metrix, where
+
+\index{metric tensor!Kerr}
+$$
+   g_{\mu\nu} = \begin{pmatrix}
+      \left( 1 - \frac{r_sr}{\rho^2}c^2 \right) & 0 & 0 & \frac{r_sr\alpha\sin^2\theta}{\rho^2} \\
+      0         & - \frac{\rho^2}{\Delta} & 0 &  0 \\
+      0 & 0 & -\rho^2 & 0 \\ 
+      \frac{r_sr\alpha\sin^2\theta}{\rho^2} & 0 & 0 & \left( r^2 + \alpha^2 + \frac{r_sr\alpha^2}{\rho^2}\sin^2\theta\right)\sin^2\theta 
+      \end{pmatrix}
+$$
+where 
+
+\begin{twocol}{
+\begin{eqnarray*}
+   r_s =& \frac{2GM}{c^2} \\
+   \alpha =& \frac{J}{Mc} \\
+\end{eqnarray*}}{
+\begin{eqnarray*}
+   \rho^2 =& r^2 + \alpha^2\cos^2\theta \\
+   \Delta =& r^2 -r_sr + \alpha^2 
+\end{eqnarray*}}
+\end{twocol}
+
+In the limit of no rotation (where $J=0$) the metric reduces to the Schwarzchild metric.
+
+\section{\myindx{Robertson-Walker Metric}}
+\myindx{Friedmann}
+\myindx{Lema\^itre}
+\myindx{Einstein field equations}
+
+Or Friedmann-Lema\^itre-Robertson-Walker metric as it probably should be named due to its 
+many contributors.  This is another exact solution of the Einstein Field equations in the context 
+\myindx{cosmology}, where a homogenous and isotropic, expanding (or contracting) universe is 
+described. The metric tensor is given as 
+
+\index{metric tensor!Robertson-Walker}
+$$
+ g_{\mu\nu} =   \begin{pmatrix}
+    c^2 & 0 & 0 & 0 \\
+    0 & -A(t)^2\frac{1}{1-kr^2} & 0 & 0 \\
+    0 & 0 & -A(t)^2r^2 & 0 \\
+    0 & 0 &  0 & -A(t)^2r^2\sin^2\theta
+    \end{pmatrix}
+$$
+where $A(t)$ is a \myindx{scale factor} affecting the spatial components.
+
+$$
+ g^{\mu\nu} =   \begin{pmatrix}
+   \frac{1}{c^2} & 0 & 0 & 0\\
+   0 & -\frac{1+kr^2}{A^2} & 0 & 0 \\
+   0 & 0 & -\frac{1}{r^2A^2} & 0 \\
+   0 & 0 & 0 & -\frac{1}{A^2r^2\sin^2\theta} 
+  \end{pmatrix}
+$$
+and 
+
+\begin{twocol}{
+\begin{eqnarray*}
+   \Gamma_{12}^2 = \frac{\dot{A}}{A} \\
+   \Gamma_{13}^3 = \frac{\dot{A}}{A} \\
+   \Gamma_{14}^4 = \frac{\dot{A}}{A} \\
+   \Gamma_{22}^1 = \frac{A\dot{A}}{c^2(1+kr^2)} \\
+   \Gamma_{22}^2 = -\frac{kr}{1+kr^2} \\
+   \Gamma_{23}^3 = \frac{1}{r} \\
+\end{eqnarray*}}{
+\begin{eqnarray*}
+   \Gamma_{24}^4 = \frac{1}{r} \\
+   \Gamma_{33}^1 = \frac{r^2A\dot{A}}{c^2} \\
+   \Gamma_{33}^2 = -r(1+kr^2) \\
+   \Gamma_{34}^4 = \frac{\cos\theta}{\sin\theta} \\
+   \Gamma_{44}^1 = \frac{r^2A\dot{A}\sin^2\theta}{c^2} \\
+\end{eqnarray*}}
+\end{twocol}
+

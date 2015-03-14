@@ -1,0 +1,66 @@
+\documentclass[a4paper]{article}
+\usepackage{tikz}
+\usepackage{amssymb}
+\usetikzlibrary{mindmap}
+
+\begin{document}
+
+
+
+\tikz[mindmap,concept color=blue!80] 
+   \node [concept] {Sets $M$}
+      child[concept color=red!80!yellow,grow=150] {node[concept] {Topological Spaces \\$(M,\tau)$}}
+      child[concept color=blue!60!yellow,grow=100] {
+         node[concept] {Metric Spaces $(M,d)$}
+            child[concept color=red!60!yellow,grow=120] { node [concept] {$\big(\mathbb{R},|\cdot|\big)$}}
+            child[concept color=red!60!yellow,grow=80] { node [concept] {$\big(\mathbb{R}^N,|\cdot|\big)$}} 
+      } 
+      child[concept color=red!20!yellow,grow=50] {node[concept] {Algebras $(M,?)$}} 
+      child[concept color=blue!20!yellow,grow=0] {
+          node[concept] {Groups $(M,\bullet)$}
+             child[concept color=red!40!yellow,grow=80] {node[concept] {Rings $\big(M,\bullet,+\big)$}} 
+             child[concept color=blue!00!yellow] { node [concept] {$\big(\mathbb{Z},+\big)$}} 
+      };
+
+\section{Topological Space}
+\section{Metric Space}
+$$
+  (M,d)
+$$
+\section{Vector Space}
+$$
+  (V,\|\cdot\|)
+$$
+\section{Group}
+$$
+   (M, \circ)
+$$
+\section{Ring}
+$$
+   (M, \cdot, +)
+$$
+
+
+\tikz[mindmap,concept color=blue!80] 
+   \node [concept] {Reelle tal}
+      child [concept color=red,grow=50] {node[concept] {Irrationale tal}
+         child[concept color=orange,grow=30] {node[concept] {\small Algebraiske tal}}
+         child[concept color=orange,grow=90] {node[concept] {\small Tran\-scendentale \\ tal}}
+      }
+      child [concept color=green!80!yellow!50!black,grow=100]  {node[concept] {Rationale tal}
+            child[concept color=green!80!black,grow=150] { 
+               node [concept] {\small Hele Tal}
+                  child[concept color=green!30!yellow,grow=70] {node[concept] {\footnotesize Positive tal}}
+                  child[concept color=green!30!yellow,grow=140] {node[concept] {\footnotesize Nega\-tive tal}}
+                  child[concept color=green!30!yellow,grow=190] {node[concept] {\footnotesize Nul}}
+               }
+            child[concept color=green!80!black,grow=70] { 
+               node [concept] {\small Decimal tal}
+                  child[concept color=green!30!yellow,grow=30] {node[concept] {\footnotesize Endelige decimaler}}
+                  child[concept color=green!30!yellow,grow=100] {node[concept] {\footnotesize Gentag\-ne decimaler}}
+            }
+      };
+
+
+
+\end{document}

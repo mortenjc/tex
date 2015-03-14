@@ -1,0 +1,56 @@
+set isosamples 40,40
+set parametric
+set surface
+set urange [0:pi]
+set vrange [0:2*pi]
+set zrange [-1.2:1.2]
+
+set size 1,1
+
+set border 0
+set nokey
+set noxtics
+set noytics
+set noztics
+
+x(u,v)= sin(u)*cos(v)
+y(u,v)= sin(u)*sin(v)
+z(u,v)= cos(u)
+
+cx(u,v)=sin(u)*cos(2*u-pi)
+cy(u,v)=sin(u)*sin(2*u-pi)
+cz(u,v)=cos(u)
+
+r(u,v)=1
+
+set term x11 
+splot r(u,v)*x(u,v), r(u,v)*y(u,v), r(u,v)*z(u,v) lt rgb "#404040"
+pause 1
+set term epslatex 
+set output "sph.eps"
+replot
+
+set term x11 
+splot r(u,v)*x(u,v), r(u,v)*y(u,v), r(u,v)*z(u,v) lt rgb "#404040" ,  r(u,0)*x(u,0), r(u,0)*y(u,0), r(u,0)*z(u,0) lt rgb "black" lw 3 
+pause -1
+set term epslatex 
+set output "sph_geo.eps"
+replot
+
+set output "sph_wind.eps"
+splot r(u,v)*x(u,v), r(u,v)*y(u,v), r(u,v)*z(u,v) lt rgb "#404040" ,  r(u,v)*cx(u,v), r(u,v)*cy(u,v), r(u,v)*cz(u,v) lt rgb "black" lw 3 
+
+
+r(u,v)= 0.1*sin(10*u)+1
+
+
+set view 74,65
+set output "def_sph.eps"
+splot r(u,v)*x(u,v), r(u,v)*y(u,v), r(u,v)*z(u,v) lt rgb "#404040"
+
+set output "def_sph_geo.eps"
+splot r(u,v)*x(u,v), r(u,v)*y(u,v), r(u,v)*z(u,v) lt rgb "#404040" ,  r(u,0)*x(u,0), r(u,0)*y(u,0), r(u,0)*z(u,0) lt rgb "black" lw 3  
+
+set output "def_sph_wind.eps"
+splot r(u,v)*x(u,v), r(u,v)*y(u,v), r(u,v)*z(u,v) lt rgb "#404040" ,  r(u,v)*cx(u,v), r(u,v)*cy(u,v), r(u,v)*cz(u,v) lt rgb "black" lw 3  
+

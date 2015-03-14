@@ -1,0 +1,52 @@
+
+\section{Curvature}
+
+\begin{figure}[h]
+\begin{center}
+\begin{tikzpicture}[scale=2.5]
+   \txfig{0}{0}{1.75}{1.25}
+   \draw[domain=-0.25:2.5,smooth,blue] plot[parametric,prefix=pgffigs/mjc,id=par_test] function{t,(t-1)**2};
+   \node [right,blue] at (0.5,1.75) {\fsz $y=(x-1)^2$};
+   \pgfsetlinewidth{0.5pt};
+   \draw[] (1, 0.707) circle (0.707);
+   \draw[] (2.1, 2.1) circle (2.364);
+\end{tikzpicture}
+\caption{\small Curvature of the function $y=(x-1)^2$ at $x=0$ and $x=1$ respectively. The radius of curvature is indicated. }
+\label{fig-curvature}
+\end{center}
+\end{figure}
+
+\index{curvature!of functions}
+The formula for the curvature of a curve of the form $y=f(x)$ is
+\begin{equation}
+  \kappa=\frac{1}{R^2} = \frac{|y''|}{(1+y'^2)^{3/2}} \label{eq:curv}
+\end{equation}
+If the curve is parametrized as $(x,y)=(f(t),g(t))$ then the formula
+for the curvature is 
+
+\begin{equation}
+  \kappa=\frac{|x'y''-y'x''|}{\;(x'^2+y'^2)^{3/2}} 
+\end{equation}
+
+
+
+\myhrule
+\begin{myex}
+In figure \ref{fig-curvature}, $y=(x-1)^2$, $y'=2x-2$ and $y''=2$. Using 
+equation \ref{eq:curv} we obtain curvature of $y$ as a function of $x$.
+
+$$
+\kappa(x) = \frac{2}{(4x^2-8x+5)^{3/2}}
+$$
+
+Evaluating this at $x=0$ and $x=1$ we get
+$$
+  \kappa(0)=\frac{2}{5^{3/2}}\approx 0.179 , \qquad \kappa(1)=2
+$$
+Using the relation $\kappa=1/R^2$ we can calculate the radius of curvature
+at $x=0$ and $x=1$
+$$
+  R(0)\approx 2.364 , \qquad R(1)\approx 0.707
+$$
+These are the values used for the two circles in the figure.
+\end{myex}

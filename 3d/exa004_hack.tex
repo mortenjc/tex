@@ -1,0 +1,80 @@
+\documentclass{article}
+
+\usepackage{pstricks,amsmath}
+\usepackage{pst-plot}
+\usepackage{pst-solides3d}
+\def\abs#1{\vert#1\vert}
+\newcommand\zslicepos{%
+  \pspolygon[fillstyle=solid, fillcolor=gray!40, linestyle=none]%
+  (-2,-2)(2,-2)(2,2)(-2,2)
+  \psline[linestyle=dashed]{<->}(-2.5,0)(2.5,0)\uput[r](2.5,0){$x$}
+  \psline[linestyle=dashed]{<->}(0,-2.5)(0,2.5)\uput[u](0,2.5,0){$y$}
+  \psline[linecolor=darkgray](-2,-2)(2,2)
+  \psline[linecolor=darkgray](-2,2)(2,-2)
+  \parametricplot [linewidth=1.2pt]{-1.73}{1.73}{1 t dup mul add 0.5 exp t}
+  \parametricplot [linewidth=1.2pt]{-1.73}{1.73}{1 t dup mul add 0.5 exp neg t}
+  \uput[d](0,-2.5){$z=c>0: x^{2}-y^{2}=c$}}
+\newcommand\zsliceneg{%
+  \pspolygon[fillstyle=solid, fillcolor=gray!40, linestyle=none]%
+  (-2,-2)(2,-2)(2,2)(-2,2)
+  \psline[linestyle=dashed]{<->}(-2.5,0)(2.5,0)\uput[r](2.5,0){$x$}
+  \psline[linestyle=dashed]{<->}(0,-2.5)(0,2.5)\uput[u](0,2.5,0){$y$}
+  \psline[linecolor=darkgray](-2,-2)(2,2)
+  \psline[linecolor=darkgray](-2,2)(2,-2)
+  \parametricplot[linewidth=1.2pt]{-1.73}{1.73}{t 1 t dup mul add 0.5 exp }
+  \parametricplot [linewidth=1.2pt]{-1.73}{1.73}{t 1 t dup mul add 0.5 exp neg }
+  \uput[d](0,-2.5){$z=c<0: x^{2}-y^{2}=-\abs{c}$}}
+
+\newcommand\xslice{%
+\pspolygon[fillstyle=solid,
+fillcolor=blue!10](-1.5,-2.25)(1.5,-2.25)(1.5,2.25)(-1.5,2.25)
+\psline{<->}(-1.5,0)(1.5,0)\uput[r](1.5,0){$y$}
+\psline{<->}(0,-2.25)(0,2.25)\uput[u](0,2.25,0){$z$}
+\psplot[linewidth=1.2pt, linecolor=blue]{-1.5}{1.5}{x dup mul neg}
+\uput[d](0,-2.5){$x=0:z=-y^{2}$}}
+
+\newcommand\yslice{%
+\pspolygon[fillstyle=solid, fillcolor=red!10]%
+(-1.5,-2.25)(1.5,-2.25)(1.5,2.25)(-1.5,2.25)
+\psline{<->}(-1.5,0)(1.5,0)\uput[r](1.5,0){$x$}
+\psline{<->}(0,-2.25)(0,2.25)\uput[u](0,2.25,0){$z$}
+\psplot[linewidth=1.2pt, linecolor=red]{-1.5}{1.5}{x dup mul}
+\uput[d](0,-2.5){$y=0:z=x^{2}$}}
+
+\begin{document}
+\begin{pspicture}(-5,-5.5)(5,1.5)
+\psset{unit=0.5}
+\rput(-4.5,0){\zslicepos}
+\rput(4.5,0){\zsliceneg}
+\rput(-4.5,-7){\xslice}
+\rput(4.5,-7){\yslice}
+\end{pspicture}
+
+\begin{pspicture*}(-3,-2.5)(3,3)
+\psset{unit=0.25,lightsrc=40 50 50,viewpoint=18 55 30 rtp2xyz,solidmemory}
+%
+\defFunction[algebraic]{ycutfcn}(x){x*x}{}{}%
+\psProjection[object=courbe,linecolor=red,linewidth=2pt,plan=yplane,
+  range=-1.5 -1,resolution=720,function=ycutfcn,action=draw**]
+\psProjection[object=courbe,linecolor=red,linewidth=2pt,linestyle=dashed,
+  plan=yplane,range=-1 1.0,resolution=720,function=ycutfcn,action=draw**]
+\psProjection[object=courbe,linecolor=red,linewidth=2pt,
+  plan=yplane,range=1.0 1.5,resolution=720,function=ycutfcn,action=draw**]
+%
+\defFunction[algebraic]{xcutfcn}(y){-y*y}{}{}%
+\psProjection[object=courbe,linecolor=blue,linewidth=2pt,plan=xplane,
+  range=0.5 1.5,resolution=720,function=xcutfcn,action=draw**]
+\psProjection[object=courbe,linecolor=blue,linewidth=2pt,linestyle=dashed,
+  plan=xplane,range=-1.5 0.5,resolution=720,function=xcutfcn,action=draw**]
+%
+\defFunction[algebraic]{zcutupfcnplus}(t){sqrt(1+t^2)}{t}{}%
+\psProjection[object=courbeR2,linecolor=black,linewidth=2pt,plan=zplaneup,
+  range=-2 2,resolution=720,function=zcutupfcnplus,action=draw**]
+%
+\defFunction[algebraic]{zcutupfcnminus}(t){-sqrt(1+t^2)}{t}{}%
+\psProjection[object=courbeR2,linecolor=black,linewidth=2pt,plan=zplaneup,
+  range=-2 2,resolution=720,function=zcutupfcnminus,action=draw**]
+\axesIIID(0,0,0)(3.5,3.5,3.5)
+\end{pspicture*}
+
+\end{document}

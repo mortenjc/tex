@@ -1,0 +1,85 @@
+\newcommand{\ia}{0.6} % Theta_zero
+\newcommand{\ib}{0.0} % Angle from due south (alpha in foster et al. p. 68)
+
+\chapter{Parallel Transport}
+\label{sec:parallel}
+\index{parallel transport}
+
+In this chapter we will discuss parallel transport of vectors along a curve. This turns out
+to be an important concept because it is closely related to Geodesics and the possible
+solutions to the equations of motion in spacetime. We will start by going through an example
+from \cite{night} to illustrate the ideas. We wish to make a parallel transport of a vector 
+pointing 'south' along a curve of constant latitude $\theta_0$. 
+
+\begin{figure}[!ht]
+\begin{center}
+  \begin{pspicture}(-4,-4)(4,4)
+    \psset{unit=3cm}
+    \parametricplotThreeD[linewidth=0.5pt, plotstyle=curve,yPlotpoints=20](0,360)(0,360)
+        {t cos u sin mul t cos u cos mul t sin} 
+
+    \parametricplotThreeD[linewidth=0.5pt,plotstyle=curve,yPlotpoints=20](0,360)(0,360)
+        {u cos t sin mul u cos t cos mul u sin}
+
+    \pstThreeDSphere[SegmentColor={[cmyk]{0,0,0,0}}](0,0,0){1} 
+
+    \pstThreeDCoor[linewidth=1.0pt,xMin=-1.5,xMax=1.5, yMax=1.5, zMax=1.5] 
+
+    \parametricplotThreeD[algebraic,plotstyle=curve,linewidth=1.5pt](0,3.1415 2 mul)
+          {sin(\ia)*cos(t)| sin(\ia)*sin(t)|cos(\ia)}
+
+    \multido{\rtt=0.0+0.3141592}{21}{
+      \parametricplotThreeD[algebraic,plotstyle=curve,linewidth=1.0pt, linecolor=blue, arrows=->](0.0,0.3 )
+          { sin(\ia)*cos(\rtt)+( cos(\ia)*cos(\rtt)*cos( \ib - cos(\ia)*\rtt ) - sin(\rtt)*sin(\ib - cos(\ia)*\rtt) )*t 
+          | sin(\ia)*sin(\rtt)+( cos(\ia)*sin(\rtt)*cos( \ib - cos(\ia)*\rtt ) + cos(\rtt)*sin(\ib - cos(\ia)*\rtt) )*t
+          | cos(\ia)          +(-sin(\ia)          *cos( \ib - cos(\ia)*\rtt ) + 0                                  )*t }
+       }
+%    \renewcommand{\ia}{1.57}
+%    \multido{\rtq=0.0+0.3141592}{21}{
+%      \parametricplotThreeD[algebraic,plotstyle=curve,linewidth=1.0pt, linecolor=blue, arrows=->](0.0,0.3 )
+%          { sin(\ia)*cos(\rtq)+( cos(\ia)*cos(\rtq)*cos( \ib - cos(\ia)*\rtq ) - sin(\rtq)*sin(\ib - cos(\ia)*\rtq) )*t 
+%          | sin(\ia)*sin(\rtq)+( cos(\ia)*sin(\rtq)*cos( \ib - cos(\ia)*\rtq ) + cos(\rtq)*sin(\ib - cos(\ia)*\rtq) )*t
+%          | cos(\ia)          +(-sin(\ia)          *cos( \ib - cos(\ia)*\rtq ) + 0                                  )*t }
+%       }
+
+  \end{pspicture}
+  \caption{\small Parallel transport of a vector around a circle at constant latitude $\theta_0$ on 
+           the surface of a sphere, following the example in \cite{night} p. 68. Here
+           $\alpha=0, \theta_0=0.6$.}
+  \label{fig-parallel}
+\end{center}
+\end{figure}
+
+\newcommand{\laet}{\lambda^1}
+\newcommand{\lato}{\lambda^2}
+
+$$
+   \lambda = \laet \eet + \lato \eto
+$$
+where ...
+$$
+   \vec{v} = \vec{r}(r_0, \theta, \phi) + \left[ \laet \eet + \lato \eto \right]t
+$$
+setting $r=1$, we get a parametric representation of the 
+transported vector  as a function of t for a given position on the sphere $(\theta, \phi)$.
+
+For transport on a circle at latitude $\theta_0$
+$$
+v(t)_{\theta,\phi}= \begin{pmatrix}
+                      \stcp \\
+                      \stsp \\
+                      \ct 
+                    \end{pmatrix}
+   + \left[ \cos(\alpha -\phi\ct) \begin{pmatrix}
+                      \ctcp \\
+                      \ctsp \\
+                      -\st 
+                    \end{pmatrix}
+   +  \frac{\sin(\alpha-\phi\ct)}{\sin\theta} \begin{pmatrix}
+                      -\stsp \\
+                      \stcp \\
+                      0 
+                    \end{pmatrix}
+      \right] t
+$$
+

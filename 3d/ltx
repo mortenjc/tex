@@ -1,0 +1,778 @@
+#!/bin/bash -p
+
+#
+#      Latex wrapper script, version 0.96
+#
+# The purpose of this script is to make running latex
+# more efficient and more convenient.
+#
+# What this script can do for you:
+#
+# 1. Run latex/pdflatex using a custom format,
+#    remaking the custom format if necessary;
+# 2. Grep for errors, warnings, unresolved references,
+#    or underfull/overfull boxes;
+# 3. Call dvips/dvipdfm
+# 4. Start a viewer, or notify the viewer if already running,
+#    so that it pops up to the front and reloads the dvi/ps/pdf file.
+# 5. Convert xfig files into eps files.
+# 6. Create/use thumbnails (only with dfvipdfm; stolen from dvipdft)
+#
+# Reasons:
+# 1. This will speed up latex a lot
+#    o  if you have a small document and at least a few \usepackage's, or
+#    o  if you have a lot of \usepackage's, or
+#    o  if your home and/or latex installation is on a remote server.
+# 2. This can reduce the "verboseness" of latex, which can help
+#    during the early stages of a document.
+# 3. Convenience during the final stages of the document.
+# 4. Convenience, too, especially when run from an editor.
+# 5. This is usually done by a makefile; however, we need this script anyway,
+#    so we can do it here as well. Plus, by doing it here ein 'ltx', we can
+#    find out which xfig-files are actually included in the tex file.
+#
+# Symopis:
+#     ltx [options ..] [main_latex_files ..]
+#   default = no option = print only errors and new chapters;
+#   for a list of all options, type 'ltx -h'.
+#
+# Examples:
+# 1. 'ltx paper'
+#    creates custom format file for paper.tex, if not existing yet,
+#    and create DVI file paper.dvi; print only errors, but continue latex'ing;
+# 2. 'ltx -x paper'
+#    like 1, and start xdvi, or update xdvi if already started by previous 'ltx';
+# 3. 'ltx -w paper'
+#    like 1, but print all warnings;
+# 4. 'ltx -p paper'
+#    like 1 and run dvips at the end;
+#
+# The two paths of creating PDF with ltx:
+# I.  Using pdftex:
+#     'ltx -P paper'
+#    (it still creates a custom format file for speedup)
+# II. Using dvipdfm:
+#     In your document you should use the 'dvipdfm' option with packages
+#	  instead of 'dvips', for instance:
+#        \documentclass[dvipfdm]{article}
+#        \usepackage[dvipdfm]{graphicx}
+#        \usepackage[dvipdfm]{hyperref}
+#     Then 'ltx paper' will create the DVI file,
+#     and 'ltx -D -P paper' will create the PDF file.
+#     If you want to be able to create both Postscript and PDF
+#     from the same laTeX source, you can write:
+#        \ifx\dvipdfm\undefined
+#          \documentclass[dvips]{book}
+#          \usepackage[dvips]{graphicx}
+#        \else
+#          \documentclass[dvipdfm]{book}
+#          \usepackage[dvipdfm]{graphicx}
+#        \fi
+#     (Actually, one of option -D's jobs is to define \dvipdfm)
+# Of course, options -x/-w/etc can be combined with -D/-P.
+#   
+# How 'ltx' determines the tex file:
+#   If no main_latex_file is specified, then 'ltx' uses "whole.tex",
+#   "main.tex", or "root.tex" in the current working directory, if present.
+#   If none exists, then it processes all .tex files which are newer than
+#   their dvi/ps/pdf files.
+#     If you do specify the main latex file(s), you can say 'ltx main.tex',
+#   'ltx main.', or just 'ltx main'.
+#     Each main_latex_file should be the "root" tex file of the document.
+#
+# Caching of window id's:
+#   In order to speed up the signalling of the previewer window,
+#   ltx tries to use the cached window id.
+#   If that cache is older than 1 day, then it is not used.
+#
+# Conversion of xfig files to eps:
+#   This is done with the fig2dev program.
+#   In addition, all text in such xfig files is enclosed by \tex{..}
+#   for use with psfrag.sty.
+#   If you don't like this, remove the call of psfrag_instex, and change
+#   the call of fig2dev accordingly.
+#
+# Page size:
+#   Deteremines automagically the page size (by grepping the tex source),
+#   and passes the appropriate function to dvips/dvipdfm.
+#   Works only if specified in the source by \usepackage[..a4paper..]{geometry}
+#   in one(!) line.
+#
+# Notes:
+# - This script finds out atomatically if something in the preamble of the
+#   main document has been changed.
+# - It can handle several separate LaTeX documents in the same directory.
+# - It does not notice if something in a style file or package has changed.
+# - You can run this script from an editor or from the shell.
+# - ltx will *not* re-generate the format file,
+#   if you change one of the definitions (option -f) or options.
+#
+# This script has been tested with teTeX under IRIX (SGI's Unix).
+# It should work under any other Unix, too.
+#
+# History:
+#   0.9  - GZ, Aug 2000
+#   0.91 - GZ, Sep 00, multiple files, aux files start with dot
+#   0.92 - GZ, Sep 00, cache window id
+#   0.93 - GZ, Sep 00, try to find out our parent process for "press return.."
+#   0.94 - GZ, Sep 00, convert fig -> eps, too
+#   0.95 - GZ, Oct 00, dvipdfm option added, inlcuding thumbnail feature
+#   0.95 - GZ, Dec 00, orig. option -f is gone, has new meaning
+#   0.96 - GZ, Dec 00, run latex if document class doesn't allow custom format file
+#   0.97 - GZ, Apr 01, works under IRIX and Solaris5 (and maybe others)
+#   0.98 - GZ, Jun 01, changed to bash, so that it runs under Linux
+#
+# Home location of this script:
+#   http://www.igd.fhg.de/~zach/latex/index.html#ltx
+#
+# Author:
+#   Gabriel.Zachmann@gmx.net
+#   Please send updates, corrections, etc., to Gabriel.Zachmann@gmx.net
+#
+# TODO:
+#
+# License:
+#   You can do with this script whatever you want,
+#   provided you give credit where credit is due,
+#   and provided you don't make money from it.
+#
+
+
+# you can add your favorite main tex file name here
+default_main_files="whole main root"
+# where temp files are put
+tmpdir=${TMPDIR:-/tmp}
+# path of fig2dev program
+fig2dev=/igd/a4/software/xfig/fig2dev
+# in case of an error, and the parent process of 'ltx' is one of the following,
+# the user has to press return (for vim: set shell=/bin/ksh !)
+editors='vi|vim|emacs|jot|pico|nano|joe|jed'
+# where option -t puts the thumbnail images (seems like it *must* be /tmp ;-( )
+thumbnaildir=./thumbnails
+
+
+
+#  parse command line
+pattern="! |l\.[0-9]|chapter:|\\\\\\end|\([a-zA-Z0-9_\-]*\.tex|[0-9]\]\)"
+# dunno why 6x backslash.  see also antipattern variable below
+pdf=""
+defs=""
+texfiles=""
+printer=""
+dvips=""
+while [[ $# > 0 ]]
+do
+	case $1 in
+		-n) nopattern=1;;
+		-c) pattern="$pattern|Citation";;
+		-r) pattern="$pattern|Reference";;
+		-e) pattern="$pattern|non-existent";;
+		-o) pattern="$pattern|Overfull";;
+		-w|-W)
+			pattern="$pattern|Citation|Overfull|Warning:|non-existent|Reference|re-run";
+			pattern="$pattern|LaTeX Font Info:|\(Font\)";
+			if [[ "$1" = -W ]]
+			then
+				pattern="$pattern|Underfull";
+			fi
+			allwarnings=1;;
+		-u) pattern="$pattern|Underfull";;
+		-p) dvips=1;;
+		-P) pdf=pdf;;
+		-D) dvipdfm=1;;
+		-C) cleanup=1;;
+		-x) raise_window=1;;
+		-i) dont_run_initex=1;;
+		-I) run_initex=1;;
+		-W) dont_use_winid=1;;
+		-t) thumbnails=1;;
+		-f) defs="$defs $2"; shift;;
+		-O) printer=1;;
+		-h) echo 'Usage: ltx [options ..]'
+			echo '   -c = print missing citations'
+			echo '   -r = print reference errors'
+			echo '   -e = print non-existent pictures'
+			echo '   -o = print overfull and underfull boxes'
+			echo '   -w = print all warnings & errors (except underfull boxes)'
+			echo '   -W = print all warnings & errors (including underfull boxes)'
+			echo '   -n = print all latex output'
+			echo "   -i = don't run initex, even if preabmle has changed"
+			echo "   -I = run initex, even if preabmle has not changed"
+			echo '   -x = raise xdvi/gv window, or start the viewer'
+			echo '   -p = create Postscript (default = create DVI)'
+			echo '   -P = create PDF (using pdftex or dvipdfm, depending on -D)'
+			echo '   -D = use dvipdfm for creating PDF, and define \dvipdfm'
+			echo '   -O = send it to the default printer'
+			echo '   -t = create/use thumbnails (only with -D & -P)'
+			echo '   -C = clean, =remove all aux. files before running latex, incl. format file'
+			echo "   -W = don't used cached window id of viewer"
+			echo "   -f ... = put tex code ... just before the \input; can be used for def's"
+			echo '   -h = this help'
+			exit
+			;;
+	     *) f="${1%tex}"; f="${f%.}"
+			texfiles="$texfiles $f.tex";;
+	esac
+
+	shift
+done
+
+#augment pattern, set antipattern
+if [[ ! -z "$dvipdfm" || ! -z "$pdf" ]]
+then
+	# latex should include only PDF images
+	pattern="$pattern|\.eps>"
+	antipattern="\([^ \)]*\.(eepic|pdf|jpg)\)"
+else
+	antipattern="\([^ \)]*\.(eepic|eps|jpg)\)"
+fi
+
+#  check sanity of options
+if [[ ! -z "$thumbnails" ]]
+then
+	if [[ -z "$pdf" || -z "$dvipdfm" ]]
+	then
+		echo "ltx: option -t makes sense only with options -D and -P!"
+		echo "     (ignoring)";
+		thumbnails=""
+	fi
+fi
+
+if [[ ! -z "$dvipdfm" && ! -z "$dvips" ]]
+then
+	echo "ltx: Warning: options -D and -p together make no sense!"
+	echo "     Assuming -P instead of -p."
+	dvips=""
+	pdf=pdf
+fi
+
+
+#  accommodate different OS's
+OS=`uname`
+case $OS in 
+	SunOS)	id=/usr/xpg4/bin/id
+			grep=/usr/xpg4/bin/grep
+			egrep=/usr/xpg4/bin/egrep
+			tr=/usr/xpg4/bin/tr
+			pidpos=9-15
+			;;
+	*)		id=id
+			grep=grep
+			egrep=egrep
+			tr=tr
+			pidpos=9-15
+			;;
+esac
+
+#  find tex files if none specified on command line
+if [[ -z "$texfiles" ]]
+then
+	for f in $default_main_files
+	do
+		if [[ -e "$f".tex ]]
+		then
+			texfiles="$f"
+			break
+		fi
+	done
+fi
+
+if [[ -z "$texfiles" ]]
+then
+	for f in *.tex
+	do
+		fn="${f%.tex}"
+		if [[ "$fn.dvi" -ot "$f" ||
+			  (! -z "$dvips" && "$fn.ps" -ot "$f") ||
+			  (! -z "$pdf" && "$fn.pdf" -ot "$f")     ]]
+		then
+			texfiles="$texfiles $f"
+		fi
+	done
+fi
+
+if [[ -z "$texfiles" ]]
+then
+	echo "ltx: no main tex file specified, none of the default ones found," >& 2
+	echo "     and none of the .tex files has changed." >& 2
+	exit 1
+fi
+
+echo "tex files = $texfiles"
+
+if [[ ! -z "$printer" ]]
+then
+	if [[ ! -z "$pdf" ]]
+	then
+		echo "Can't print from PDF file!"
+		echo "(Maybe you meant option -O instead of -P?)"
+	elif [[ -z "$dvips" ]]
+	then
+		dvips=1
+	fi
+fi
+
+
+function processtex
+{
+	echo "Processing $1 ..."
+
+	maintex="${1%.tex}"
+
+	if [[ ! -f "$maintex.tex" ]]
+	then
+		echo "  $maintex.tex does not exist!"
+		return
+	fi
+
+	#  set some variables so discrimination between latex/pdflatex is easier
+	if [[ -z "$pdf" && -z "$dvipdfm" ]]
+	then
+		fmtsuff="dvi"
+	elif [[ -z "$dvipdfm" ]]
+	then
+		fmtsuff="pdf"
+	else
+		fmtsuff="dvipdfm"
+	fi
+	prefile=".$maintex-$fmtsuff.pre"
+	fmtfile=".$maintex-$fmtsuff.fmt"
+
+
+	#  clean up aux files
+	if [[ "$cleanup" != "" ]]
+	then
+		echo Removing intermediate files ..
+		for suf in log aux toc lot lof out blg pfg brf otc #bbl 
+		do
+			if [[ -e "$maintex".$suf ]]
+			then
+				echo -n "$maintex.$suf "
+				rm "$maintex".$suf
+			fi
+		done
+		echo
+		for f in "$prefile" "$fmtfile" ".$maintex.xdvi" ".$maintex.gv" mylatex.ltx
+		do
+			if [[ -e "$f" ]]
+			then
+				echo -n "$f"
+				rm "$f"
+			fi
+		done
+		echo
+		if [[ -e $thumbnaildir/"$maintex".1 ]]
+		then
+			echo $thumbnaildir/"$maintex.[0-9]*"
+			rm $thumbnaildir/"$maintex".1
+			rm $thumbnaildir/"$maintex".[0-9]* 2>/dev/null
+		fi
+	fi
+
+
+	# check if document class alows custom format file
+	weird_document_class=`head -20 "$maintex.tex" | grep documentclass |
+						  grep dinbrief`
+
+	#  check if preambel has changed
+	if [[ ! -e "$fmtfile" ]]
+	then
+		run_initex=1
+	elif [[ -z "$dont_run_initex" && "$fmtfile" -ot "$maintex.tex" &&
+		  -z "$run_initex" && -z "$weird_document_class" ]]
+	then
+
+		tmprefile=$tmpdir/ltx-$$-pre
+		rm -f "$tmprefile"
+
+		sed -e '/begin{document}/q' -e '/^[ 	]*%/d' -e '/^[ 	]*$/d' \
+			"$maintex.tex" > "$tmprefile"
+
+		if [[ ! -s "$tmprefile" ]]
+		then
+			echo
+			echo Couldn\'t extract preambel of "$maintex.tex"!
+			echo "(No begin{document}?)"
+			echo Assuming format has to be rebuilt ..
+			run_initex=1
+		elif [[ ! -e "$prefile" || ! -e "$fmtfile" ]]
+		then
+			cp "$tmprefile" "$prefile"
+			run_initex=1
+		elif diff -b "$tmprefile" "$prefile" > /dev/null
+		then
+			echo Custom format file is up-to-date
+		else
+			rm "$prefile"
+			cp "$tmprefile" "$prefile"
+			run_initex=1
+		fi
+
+		rm -f "$tmprefile"
+
+	fi
+
+	#  run initex, if necessary
+
+	if [[ ! -z "$pdf" && -z "$dvipdfm" ]]
+	then
+		pdftex=pdf
+	else
+		pdftex=""
+	fi
+
+	if [[ ! -z "$run_initex" ]]
+	then
+		echo "Running initex to create custom format file ..."
+
+		# remove some secondary files, which might cause problems otherwise
+		# for instance, when switching from PDF to PS
+		rm -f "$maintex.aux" "$maintex.brf"
+
+		if [[ ! -e mylatex.ltx ]]
+		then
+			# try to symlink it
+			mylatex=`kpsewhich mylatex.ltx`
+			if [[ "$mylatex" = "" ]]
+			then
+				echo "ltx: couldn\'t find mylatex.ltx!" >& 2
+				exit 1
+			fi
+
+			echo "Linking mylatex.ltx to $mylatex."
+			echo
+
+			rm -f mylatex.ltx  # -e==false also, if mylatex.ltx is dangling link
+			ln -s $mylatex .
+		fi
+
+		if [[ ! -z "$dvipdfm" ]]
+		then
+			defs="$defs \def\dvipdfm{1}"
+		fi
+
+		${pdftex}initex \&${pdftex}latex mylatex.ltx \
+			"\relax $defs \input" "$maintex.tex"
+
+		if [[ $? != 0 ]]
+		then
+			echo "ltx: don't run latex because of error from initex!" >& 2
+			exit $?
+		fi
+
+		mv mylatex.fmt "$fmtfile"
+		echo
+	fi
+
+
+	#  stop viewer (if any)
+	#  to prevent viewer from updating while outfile is incomplete
+	pid=""; wid=""
+	if [[ -z "$dvips" && -z "$pdf" ]]
+	then
+		viewer_name=xdvi.bin
+		# we start xdvi.bin, because xdvi start 'xdvi.bin -name xdvi ...',
+		# which leaves less room for the dvi file name, which increases
+		# changes that 'grep $maintex' failes.
+	else
+		viewer_name=gv
+	fi
+	idfile=".$maintex.$viewer_name"
+	my_uid=`$id -u`
+
+	if [[ ! -z "$dont_use_winid" ]]
+	then
+		rm -f "$idfile"
+	fi
+
+	if [[ -r "$idfile" ]]
+	then
+		# try cached id's
+		pid=`head -n 1 -q "$idfile"`
+		wid=`tail -n 1 -q "$idfile"`
+		if [[ ! -z "$pid" ]]
+		then
+			if /bin/ps -p $pid | grep -q $pid
+			then
+				true
+			else
+				pid=""; wid=""
+				rm -f "$idfile"
+				echo rm -f "$idfile"
+			fi
+		fi
+	fi
+
+	if [[ -z "$pid" ]]
+	then
+		pid=`/bin/ps -f -u $my_uid | grep $viewer_name | grep "$maintex" |
+			 head -1 | cut -b$pidpos`
+		# this grep works only, if viewer is started like 'gv file.ps -options'.
+	fi
+
+	if [[ ! -z "$pid" ]]
+	then
+		kill -STOP $pid
+	fi
+
+
+	#  run latex
+	ltxoutfile="$maintex.dvi"
+
+	if [[ -e "$ltxoutfile" ]]
+	then
+		rm -f "$ltxoutfile".old
+		mv "$ltxoutfile" "$ltxoutfile".old
+	fi
+
+	echo "Running latex ..."
+
+	if [[ -z "$weird_document_class" ]]
+	then
+		# we can actually use a custom format file
+		if [[ "$nopattern" = 1 ]]
+		then
+			${pdftex}virtex --interaction nonstopmode \&"${fmtfile%.fmt}" "$maintex"
+		else
+			echo "pattern=$pattern"
+
+			${pdftex}virtex --interaction nonstopmode \&"${fmtfile%.fmt}" "$maintex" | 
+			$egrep "($pattern)" #| $egrep -v "$antipattern"
+		fi
+	else
+		# some classes don't work with custom format files :-(
+		echo " document class doesn't work with custom format file."
+		${pdftex}latex --interaction nonstopmode "$maintex"
+	fi
+
+
+	# check if latex succeded (checking $? doesn't seem to work ;-( )
+	err=0
+	if [[ ! -f "$ltxoutfile" ]]
+	then
+		echo
+		echo No $ltxoutfile file!
+		err=1
+	fi
+	if [[ ! -f "$maintex".log ]]
+	then
+		echo
+		echo No log file!
+		err=1
+	fi
+	if $grep -q -e '^!' "$maintex".log
+	then
+		echo
+		echo "LaTeX has encountered errors!"
+		err=1
+	fi
+	if [[ "$err" = 1 ]]
+	then
+		if [[ ! -z "$pid" ]]
+		then
+			#  continue viewer
+			kill -CONT $pid
+		fi
+		return
+	fi
+
+
+	#  run dvips/dvipdfm if wanted
+	if [[ ! -z "$dvips" || ( ! -z "$dvipdfm" && ! -z "$pdf" ) ]]
+	then
+		# find out paper size
+		geometry=`$grep -e {geometry} "$maintex.tex" | $egrep -v ^%`
+		if [[ ! -z "$geometry" ]]
+		then
+			papersize=""
+			if [[ "$geometry" = *a4paper* ]]
+			then
+				papersize="a4"
+			elif [[ "$geometry" = *letterpaper* ]]
+			then
+				papersize="letter"
+			fi
+			if [[ ! -z "$papersize" ]]
+			then
+				echo Paper size: $papersize
+				if [[ ! -z "$dvips" ]]
+				then
+					papersize="-t $papersize"
+				else
+					papersize="-p $papersize"
+				fi
+			fi
+		fi
+	fi
+
+	if [[ ! -z "$dvips" ]]
+	then
+		echo "Running dvips ..."
+		dvips $papersize -Pcmz -Pamz -o -r0 "$maintex"
+	elif [[ ! -z "$dvipdfm" && ! -z "$pdf" ]]
+	then
+
+		save_tmp="$TMP"
+		if [[ ! -z "$thumbnails" && -d "$thumbnaildir" &&
+			  -e "$thumbnaildir/$maintex.1" ]]
+		then
+			export TMP="$thumbnaildir"
+			echo "Running dvipdfm (using thumbnails from $TMP) ..."
+			thumb="-t"
+		else
+			echo "Running dvipdfm ..."
+			thumb=""
+		fi
+
+		dvipdfm $papersize $thumb -z9 "$maintex"
+		TMP="$save_tmp"
+	fi
+
+
+	#  continue viewer
+	if [[ ! -z "$pid" ]]
+	then
+		kill -CONT $pid
+	fi
+
+
+	# print it
+	if [[ ! -z "$printer" && -s "$maintex.ps" ]]
+	then
+		echo "printing $maintex.ps .."
+		lpr "$maintex.ps"
+	fi
+
+
+	#  raise dvips/gv window if any, or launch it
+	if [[ "$raise_window" != "" ]]
+	then
+
+		if [[ ! -z "$pdf" ]]
+		then
+			viewed_file="$maintex".pdf
+		elif [[ "$dvips" != "" ]]
+		then
+			viewed_file="$maintex".ps
+		else
+			viewed_file="$maintex".dvi
+		fi
+
+		if [[ $viewer_name = gv ]]
+		then
+			win_name=gv
+			viewer_options="-safer -pixmap"
+			signal=HUP
+		else
+			win_name=Xdvi
+			viewer_options="-paper a4 -nopostscript -keep -s 7 -gsalpha -bg white"
+			signal=USR1
+		fi
+
+		if [[ -z "$pid" || -z "$wid" ]]
+		then
+			echo "starting $viewer_name .."
+
+			$viewer_name "$viewed_file" $viewer_options -geometry +100+1 > /dev/console 2>&1 &
+			# viewed_file must be first parameter, so that we can ps|grep for it
+
+			# cache window id
+			echo "trying to obtain window id .."
+			sleep 1
+			pid=`/bin/ps -f -u $my_uid | $grep $viewer_name | $grep "$maintex" |
+				 $grep -v grep | head -1 | cut -b$pidpos`
+			typeset -i i=0
+			wid=""
+			if [[ `uname` == Linux && "$DISPLAY" == :0* ]]
+			then
+				# seems to be necessary under RedHat 7.0 :-(
+				# (for xwininfo)
+				DISPLAY=`uname -n`:0.0
+			fi
+			while [[ ! -z "$pid" && -z "$wid" && $i -lt 10 ]]
+			do
+				echo .
+				# Window id doesn't show up immediately :-( .
+				# We can't grep for $maintex, because if hyperref is used
+				# gv shows the pdftitle, not the file name.
+				sleep 1
+				wid=`xwininfo -root -tree | $grep $win_name | # "$maintex"
+					 $tr -s "[:space:]" | cut -d' ' -f2`
+				(( i += 1 ))
+			done
+			if [[ -z "$pid" || -z "$wid" ]]
+			then
+				echo
+				if [[ -z "$pid" ]]
+				then
+					echo Failed to determine PID of $viewer_name!
+				else
+					echo Failed to determine window ID of $viewer_name!
+				fi
+				echo
+			else
+				echo "window id = $wid"
+				echo $pid > "$idfile"
+				echo $wid >> "$idfile"
+			fi
+
+		else
+
+			echo "raising viewer (window id = $wid)"
+			raise_window $wid
+
+			# send "update" signal, in case the viewer was already on top
+			kill -$signal $pid
+
+		fi
+	fi
+
+
+	#  create thumbnails
+	if [[ ! -z "$thumbnails" && -s "$maintex.pdf" &&
+		  ! -z "$pdf" && ! -z "$dvipdfm" ]]
+	then
+		if [[ -d $thumbnaildir ]]
+		then
+			echo "Updating thumbnails ..."
+			rm -rf $thumbnaildir
+		else
+			echo "Creating thumbnails ..."
+		fi
+		if [[ ! -d $thumbnaildir ]]
+		then
+			mkdir $thumbnaildir
+		fi
+		if [[ ! -d $thumbnaildir ]]
+		then
+			echo "ltx: Failed to create thumbnail directory $thumbnaildir!"
+		else
+			gs -r10 -dNOPAUSE -dBATCH -sDEVICE=png256 \
+			   -sOutputFile=$thumbnaildir/"$maintex".%d "$maintex".pdf | \
+			$grep -v -e Loading -e Page
+		fi
+	fi
+
+}
+
+
+#  process each tex file
+err=0
+for f in $texfiles
+do
+	processtex $f
+done
+
+
+if [[ "$err" = 1 ]]
+then
+	# check if running from an editor
+	if /bin/ps -p $PPID | $grep -E -q "$editors"
+	then
+		echo
+		echo Press return ..
+		read l
+		exit 1
+	fi
+fi
+

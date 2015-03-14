@@ -1,0 +1,21 @@
+
+
+\documentclass[a4paper]{report}
+
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{moreverb}
+\usepackage{pspicture,pstricks,pst-3dplot}
+\usepackage{pdftricks}
+
+\begin{document}
+
+XXX
+\begin {pspicture}(-4,-2.25) (2,4.25) \psgrid
+ \pstThreeDCoor[xMin =-3, yMax =2]
+ \pstThreeDSphere[linecolor = blue ](1 , -1 ,2) {2}
+ \pstThreeDDot[dotstyle =x, linecolor =red , drawCoor= true ](1 , -1 ,2)
+ \end{pspicture}
+
+YYY
+\end{document}

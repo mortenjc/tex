@@ -1,0 +1,16 @@
+\documentclass[a4paper, openany]{memoir}
+
+\usepackage[3D]{movie15}
+\usepackage{hyperref}
+
+\begin{document}
+  \includemovie[
+  poster,
+  toolbar,
+  label=dice,
+  text=(test.u3d),
+  3Droo=27,
+  3Dlights=Cube
+]{1\linewidth}{1\linewidth}{test.u3d}
+
+\end{document}

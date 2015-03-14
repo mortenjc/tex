@@ -1,0 +1,249 @@
+\documentclass{report}
+\usepackage{tikz, amsmath, amssymb}
+\begin{document}
+
+\chapter{Neural Networks}
+Consider a neural network consisting of an input layer of $n$
+units, a hidden layer with $m$ units, and an output layer 
+with $k$ units.
+
+\tikzstyle{invis}=[circle,draw=blue!00,fill=blue!00,thick,
+                        minimum size = 8mm, inner sep = 0mm]
+\tikzstyle{inputlayer}=[circle,draw=blue!50,fill=blue!20,thick,
+                        minimum size = 8mm, inner sep = 0mm]
+\tikzstyle{plusone}=[circle,draw=blue!20,thick,
+                        minimum size = 8mm, inner sep = 0mm]
+\tikzstyle{hiddenlayer}=[circle,draw=orange!50,fill=orange!20,thick,
+                        minimum size = 8mm, inner sep = 0mm]
+\tikzstyle{outlayer}=[circle,draw=red!50,fill=red!20,thick,
+                        minimum size = 8mm, inner sep = 0mm]
+
+\begin{center}
+\begin{tikzpicture}
+  \node[invis] (x0) {};
+  \node[] (spc0) [right of = x0] {};
+  \node[invis] (x1) [below of = x0] {$i_1$};
+  \node[invis] (x2) [below of = x1] {$i_2$};
+  \node[invis] (xv) [below of = x2] {$\vdots$};
+  \node[invis] (xn) [below of = xv] {$i_n$};
+
+  \node[plusone] (i0) [right of=spc0] {$+1$};
+  \node[inputlayer] (i1) [below of=i0] {$a^{(1)}_1$};
+  \node[inputlayer] (i2) [below of=i1] {$a^{(1)}_2$};
+  \node[] (idots) [below of=i2] {$\vdots$};
+  \node[inputlayer] (in) [below of=idots] {$a^{(1)}_n$};
+
+  \draw (x1) to (i1); \draw (x2) to (i2); \draw (xn) to (in);
+
+  \node[] (spc) [right of = i0] {};
+
+  \node[plusone] (h0) [right of=spc] {$+1$};
+  \node[hiddenlayer] (h1) [below of=h0] {$a^{(2)}_1$};
+  \node[hiddenlayer] (h2) [below of=h1] {$a^{(2)}_2$};
+  \node[] (hdots) [below of=h2] {$\vdots$};
+  \node[hiddenlayer] (hm) [below of=hdots] {$a^{(2)}_m$};
+
+  \draw (i0) to (h1); \draw (i0) to (h2); \draw (i0) to (hm);
+  \draw (i1) to (h1); \draw (i1) to (h2); \draw (i1) to (hm);
+  \draw (i2) to (h1); \draw (i2) to (h2); \draw (i2) to (hm);
+  \draw (in) to (h1); \draw (in) to (h2); \draw (in) to (hm);
+
+  \node[] (spc2) [right of = h0] {};
+
+  \node[outlayer] (o1) [below right of=spc2] {$a^{(3)}_1$};
+  \node[outlayer] (o2) [below of=o1] {$a^{(3)}_2$};
+  \node[] (odots) [below of=o2] {$\vdots$};
+  \node[outlayer] (ok) [below of=odots] {$a^{(3)}_k$};
+
+  \draw (h0) to (o1); \draw (h0) to (o2); \draw (h0) to (ok);
+  \draw (h1) to (o1); \draw (h1) to (o2); \draw (h1) to (ok);
+  \draw (h2) to (o1); \draw (h2) to (o2); \draw (h2) to (ok);
+  \draw (hm) to (o1); \draw (hm) to (o2); \draw (hm) to (ok);
+
+  \node[] (spc3) [right of=o1] {};
+  \node[invis] (y1) [right of = spc3] {$o_1$};
+  \node[invis] (y2) [below of = y1] {$o_2$};
+  \node[invis] (yd) [below of = y2] {$\vdots$};
+  \node[invis] (yk) [below of = yd] {$o_k$};
+
+  \draw (o1) to (y1); \draw (o2) to (y2); \draw (ok) to (yk);
+
+\end{tikzpicture}
+\end{center}
+
+The figure shows how every input unit is connected to every unit in layer 2 and so on. Also shown are the 'bias' units which have the constant vaule $1$. For consistency in the notation we use $a^{(i)}_j$ to denote the value of the j'th unit of the i'th layer.
+
+We can also use vector notation such as $\mathbf{a}^{(1)}$ which in this case is the vector holding the $n$ values of the first (input) unit. Using vector notation we can now calculate the values in layer 2 given the (input) values in layer 1 as
+
+\begin{equation*}
+  \mathbf{a}^{(2)} = g(\mathbf{\Theta}^{(1)}\mathbf{\tilde{a}}^{(1)}) = 
+  g(
+  \begin{bmatrix}
+    \theta^1_{10} & \hdots & \theta^1_{1n}\\ 
+    \theta^1_{20} & \hdots & \theta^1_{2n}\\ 
+    \vdots & \ddots & \vdots\\ 
+    \theta^1_{m0} & \hdots & \theta^1_{mn}\\ 
+  \end{bmatrix}
+  \begin{bmatrix}
+     1 \\
+     a^1_1 \\
+     \vdots  \\
+     a^1_n 
+  \end{bmatrix}
+  )
+\end{equation*}
+where $g(z)$ is the sigmoid function, which we define as operating on each component of the vector.
+$$
+    g(z) = \frac{1}{1+e^{-z}},  \qquad g(\binom{a}{b}) = \binom{g(a)}{g(b)}
+$$
+and similar for the values of layer 3 (output layer)
+\begin{equation*}
+  \mathbf{a}^{(3)} = g(\mathbf{\Theta}^{(2)}\mathbf{\tilde{a}}^{(2)}) =  
+   g(
+  \begin{bmatrix}
+    \theta^2_{10} & \hdots & \theta^2_{1m}\\ 
+    \theta^2_{20} & \hdots & \theta^2_{2m}\\ 
+    \vdots & \ddots & \vdots\\ 
+    \theta^2_{k0} & \hdots & \theta^2_{km}\\ 
+  \end{bmatrix}
+  \begin{bmatrix}
+     1 \\
+     a^2_1 \\
+     \vdots  \\
+     a^2_m 
+  \end{bmatrix}
+ )
+\end{equation*}
+
+\section{Two inputs and One output}
+\subsection{A simple 2 layer NN}
+Let's consider the simplest case of a NN, namely one with two input units and one output unit as illustrated below.
+
+\begin{center}
+\begin{tikzpicture}
+  \node[invis] (x0) {};
+  \node[] (spc0) [right of = x0] {};
+  \node[invis] (x1) [below of = x0] {$i_1$};
+  \node[invis] (x2) [below of = x1] {$i_2$};
+
+  \node[plusone] (i0) [right of=spc0] {$+1$};
+  \node[inputlayer] (i1) [below of=i0] {$a^{(1)}_1$};
+  \node[inputlayer] (i2) [below of=i1] {$a^{(1)}_2$};
+
+  \draw (x1) to (i1); \draw (x2) to (i2); 
+
+  \node[] (spc) [right of = i0] {};
+
+  \node[outlayer] (h1) [below of=h0] {$a^{(2)}_1$};
+
+  \draw (i0) to (h1); \draw (i1) to (h1); \draw (i2) to (h1); 
+
+  \node[] (spc3) [right of=h1] {};
+  \node[invis] (o1) [right of = spc3] {$o_1$};
+
+  \draw (h1) to (o1); 
+\end{tikzpicture}
+\end{center}
+
+$$
+  a^2_1 = g( \theta^1_{10}  + \theta^1_{11} a^1_1 + \theta^1_{12} a^1_2    )
+$$
+let us investigate what can be achieved by such a simple network by checking the output as a function of different parameters $\theta_i$.
+\vspace{0.5cm}
+
+
+\begin{minipage}[c]{0.333\textwidth}
+\begin{tabular}{rrlc}
+\hline
+  $i_1$  &  $i_2$ &  o \\ \hline
+    0    &    0   &  g(-15) &  $\approx 0$ \\
+    0    &    1   &  g(-5)  &  $\approx 0$ \\
+    1    &    0   &  g(-5)  &  $\approx 0$ \\ 
+    1    &    1   &  g(5)   &  $\approx 1$ \\ \hline
+\end{tabular}
+\begin{flushleft}
+$\theta=[-15, 10, 10 ]$ 
+\end{flushleft}
+\end{minipage}
+\begin{minipage}[c]{0.333\textwidth}
+\begin{tabular}{rrlc}
+\hline
+  $i_1$  &  $i_2$ &  o \\ \hline
+    0    &    0   &  g(-15) &  $\approx 0$ \\
+    0    &    1   &  g(5)  &  $\approx 1$ \\
+    1    &    0   &  g(5)  &  $\approx 1$ \\ 
+    1    &    1   &  g(25)   &  $\approx 1$ \\ \hline
+\end{tabular}
+\begin{flushleft}
+$\theta=[-15, 20, 20 ]$ 
+\end{flushleft}
+\end{minipage}
+\begin{minipage}[c]{0.333\textwidth}
+\begin{tabular}{rrlc}
+\hline
+  $i_1$  &  $i_2$ &  o \\ \hline
+    0    &    0   &  g(20) &  $\approx 1$ \\
+    0    &    1   &  g(5)  &  $\approx 1$ \\
+    1    &    0   &  g(5)  &  $\approx 1$ \\ 
+    1    &    1   &  g(-10)   &  $\approx 0$ \\ \hline
+\end{tabular}
+\begin{flushleft}
+$\theta=[20, -15, -15]$
+\end{flushleft}
+\end{minipage}
+
+\vspace{0.5cm}
+The outputs corresponds to logical AND, OR and NAND respectively.
+
+\subsection{Three layers}
+If we want a more complicated behavior with two inputs and one output, for example the XOR function, we need to move up to three layers. This is the simplest possible three layer network of this kind.
+
+\begin{center}
+\begin{tikzpicture}
+  \node[invis] (x0) {};
+  \node[] (spc0) [right of = x0] {};
+  \node[invis] (x1) [below of = x0] {$i_1$};
+  \node[invis] (x2) [below of = x1] {$i_2$};
+
+  \node[plusone] (i0) [right of=spc0] {$+1$};
+  \node[inputlayer] (i1) [below of=i0] {$a^{(1)}_1$};
+  \node[inputlayer] (i2) [below of=i1] {$a^{(1)}_2$};
+
+  \draw (x1) to (i1); \draw (x2) to (i2); 
+
+  \node[] (spc) [right of = i0] {};
+
+  \node[plusone] (h0) [right of=spc] {$+1$};
+  \node[hiddenlayer] (h1) [below of=h0] {$a^{(2)}_1$};
+  \node[hiddenlayer] (h2) [below of=h1] {$a^{(2)}_2$};
+
+  \draw (i0) to (h1); \draw (i1) to (h1); \draw (i2) to (h1); 
+  \draw (i0) to (h2); \draw (i1) to (h2); \draw (i2) to (h2); 
+
+  \node[] (spc3) [right of=h1] {};
+  \node[outlayer] (o1) [right of=spc3] {$a^{(3)}_1$};
+  \draw (h0) to (o1); \draw (h1) to (o1); \draw (h2) to (o1); 
+  
+  \node[] (spc4) [right of=o1] {};
+  \node[invis] (y1) [right of = spc4] {$o_1$};
+  \draw (o1) to (y1);
+
+\end{tikzpicture}
+\end{center}
+If we carry through the calculations for the activation values we get for the final output
+$$
+  a^3_1 = g( \theta^2_{10}  + \theta^2_{11} a^2_1 + \theta^2_{12} a^2_2    )
+$$
+where the values for the hidden layer are
+$$
+  a^2_1 = g( \theta^1_{10}  + \theta^1_{11} a^1_1 + \theta^1_{12} a^1_2    )
+$$
+$$
+  a^2_2 = g( \theta^1_{20}  + \theta^1_{21} a^1_1 + \theta^1_{22} a^1_2    )
+$$
+This model gives us a total of nine parameters. The 
+XOR function can be constructed as the following logical function (x1 NAND x2) AND (x1 OR x2). So based on the previous examples, we could set the parameters $\thetaî_{jk}$ as follows.
+
+Let $\theta^1_1 = [-15,20,20]$, and $\theta^1_2 = [20,-15,-15]$, this means that $a^2_1$ is the OR of the inputs and $a^2_2$ is the logical NAND.  Finally let us set $\theta^2_1 = [-15, 10, 10]$ corresponding to the AND function. 
+
+\end{document}
