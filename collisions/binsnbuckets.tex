@@ -1,0 +1,52 @@
+\section{bins and buckets}
+\IEEEPARstart{A}{} 
+typical implementation of a MAC address forwarding table is 
+to make an array of $W$ buckets or bins each able to hold a number
+of MAC address entries. We call this number the depth $d$ of the table.
+
+A MAC address table is often specifiied in terms of its size (in entries), but an ASIC designer is probably more concerned with 
+how many gates it occupies, the latter being proportional to the number of bits. Given the switch parameters $(n,d)$ the size 
+is simply $n\cdot d$. If the size (in bits) of each entry is $s$, the  number of gates are $\approx n\cdot d \cdot s$.
+
+
+
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.3}
+\caption{ A MAC address table consists of a MAC address, the switch port number where the MAC address was learned
+and an age field. The index is implicit but shown here to illustrate its relevance.}
+\centering
+\begin{tabular}{lrrr}
+\hline
+\bfseries mac addr. & \bfseries port & \bfseries age & \bfseries index\\ 
+\hline
+00:23:14:00:00:01 &  3 & 125  & 47 \\
+20:00:01:01:02:03 &  17  &  50 & 1 \\
+$\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ \\
+64:b9:e8:bc:87:1c &  4 & 85   & 47 \\
+\hline
+\end{tabular}
+
+\end{table}
+
+
+
+
+Mapping a MAC address to a specific bin is typically done by applying a hashing 
+function, $h$,  to the $M$ bit MAC address and associated information,  into the $W$ bins.
+
+
+A hash function, h,  is a surjective function from a domain $\{0,\ldots,2^{n -1}\}$ of addresses to a domain $\{0,\ldots,2^{ m-1}\}$ of indices, 
+where $m < n$. Borrowing a notation from cryptography, $h$ maps a bit string of length $n$ into a bit string of length $m$.
+
+$$
+   h: \{01\}^m \rightarrow \{01\}^{n}
+$$
+
+One popular method is to divide the MAC address into 4,6,8 or 12 bit chunks and then 
+XOR these together. The final value identifies the bucket in which
+the MAC address should be stored. Later we will discuss some specific hashing functions.
+
+Since the final hash value has many fewer bits than the original data, it will clearly be the case
+that multiple MAC addresses will map to the same hash value. This is called a hash collision.
+
+

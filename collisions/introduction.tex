@@ -1,0 +1,71 @@
+\section{Introduction}
+\IEEEPARstart{P}{acket} data networks are concerned with the forwarding of data packets.
+The demand for bandwidth is constantly growing,  and because of advances in technology
+we have witnessed packet data networks go from 1Mbit/s to 100Gbit/s (in the 
+case of Ethernet) from about 1980 to the present day.
+Vendors strive for what is called wire-speed forwarding, which means that they support
+forwarding descisions at the incoming packet rates. This aim pushes the implementations of forwarding 
+algorithms into Application Specific Integrated Circuits (ASICs).
+Common to many packet forwarding technologies are a central switch fabric, and 
+a table containing information about known transmitters in the network.
+The population of this table is often, but not necessarily always, done by means of hashing. Consequently
+the properties of hashing in data packet networks has attracted some attention. For example
+\cite{Tiwari2010} gives a survey of cryptographic hash functions, where \cite{Sedgewick2011}  provides 
+discussions on the properties on simpler hash functions. One study \cite{Huntley2006} examines the effect of hash collisions 
+on the performance of packet forwarding based on  combinatorical calculations and real-world testing, and
+\cite{Stancu2003} examines the effective size of switching tables based on testing scenarios, where 
+they have full control of the network topology and configuration. Hash tables may not 
+even be central \cite{Ray2007}, but distributed across one or more chips.
+
+Once  the ASIC implementation of a hash table is done, there is no possibility of subsequent 
+modifications, so any design guidance that can be used in advance should be taken into
+account. 
+In this paper we will elaborate on both the theoretical aspects of hash collisions in a Ethernet switching 
+context. 
+This is done by providing a general model of a switch MAC address table, at least one often used 
+hashing algorithm in switch ASICS as well as simulations. The hashing methods used in 
+wirespeed switches is rarely announced, and the best utilization is often reached in 
+unrealistic scenarios~\cite{Huntley2006}\cite{Stancu2003}.
+
+The following discussion will focus on Ethernet networks as a theme, 
+mostly because is has proven a very successful and adaptable technology\cite{Song2002},
+but the principles are completely general. 
+We use the terms bridging and switching interchangable.
+
+
+\section{Bridging}
+\IEEEPARstart{A}{n} Ethernet network consists of one or more interconnected bridges
+in a loop-free topology (using the Spanning Tree algorithm). In 
+addition to other switches nodes (or end hosts) are also connected.
+Each node is uniquely identified by its MAC address, which is a 48 bit 
+serial number. The bridges ensures the delivery of packets to end-hosts
+in a given segment. For unicast traffic the end-host is normally the only recepient 
+of that packet. The forwarding mechanism is based on MAC address
+tables holding enough information to make a forwarding descision,
+where the switch ... at most one port... \cite{IEEE802.1D} for a detailed description of the MAC address learning and 
+forwarding mechanisms see \cite{Ray2007}.
+
+For this purpose, each bridge maintains a forwarding table with entries
+of the form $<$MAC address, DPORT$>$. 
+Populating the forwarding table is carried out based on the
+{\em source addresses} of packets that a bridge receives. 
+
+When subsequently receiving a packet on port P1 with an unknown
+source address SA, the bridge then creates (learns) an entry of the form
+$<$SA,P1$>$.
+
+The 'learned' entries are then used to make forwarding
+decisions for packets {\em destined} for address SA. These
+will be sent out on port P1. Now if a packet arrives on 
+any port, with a destination address DA which is not in the 
+forwarding table, that packet is forwarded on all active ports.
+This is also called flooding. Excessive flooding is a potentially big 
+problem for the stability and bandwidth utilization in a network.
+
+In the following we will describe a typical implementation of 
+forwarding tables and the ...
+
+While this analysis share some similarities with other studies,
+these mostly seem to model traffic scenarios, where we look
+at ...
+

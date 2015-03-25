@@ -1,0 +1,59 @@
+%\documentclass[twocolumn]{amsart}
+\documentclass[journal]{IEEEtran}
+\usepackage[cmex10]{amsmath}
+\usepackage{tikz, amssymb,listings}
+
+\begin{document}
+
+%\bibliographystyle{plain}
+\bibliographystyle{IEEEtran}
+
+\title{MAC address table size design}
+
+\author{Morten~Jagd~Christensen, Ph.D.~\IEEEmembership{Senior Member,~IEEE}% <-this % stops a space
+
+John~Doe~Smith
+%\thanks{M. Christensen is with Cobham, (e-mail: morten.jagd.christensen @ cobham.com).}% <-this % stops a space
+}
+
+\markboth{Journal of \LaTeX\ Class Files,~Vol.~6, No.~1, January~2007}%
+{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for Journals}
+
+\maketitle
+
+\begin{abstract}
+A central feature of an Ethernet switch is the size and organization of its MAC address table. The table 
+is often populated by means of hashing MAC addresses and other parameters. Often manufacturers 
+use the size of this table as a marketing parameter, but the size of the table is misleading when it comes to
+performance.
+In this article we give a brief description of Ethernet switching followed by discussions of hashing in the context of 
+Ethernet switching. A statistical model for hash collisions and how they relate to performance is presented.
+Finally some specific implementations of hashing functions are described and these are used 
+in simulations.  In conclusion we discuss how size constraints and performance of the hashing functions 
+can lead to design descisions with regards to MAC address table implementations.
+\end{abstract}
+
+
+\input{introduction}
+\input{binsnbuckets}
+\input{hashcolls}
+\input{hashfuncs}
+\input{simulations}
+
+
+\section{Conclusion}
+\IEEEPARstart{W}{hen}
+considering ,...
+
+
+\section*{Acknowledgment}
+\IEEEPARstart{T}{he}
+authors would like to thank Professor Christian Kornerup Hansen, Eastern Washington University, for his
+suggestions to the content and organization of this paper.
+
+
+\bibliography{Master}
+
+
+
+\end{document}

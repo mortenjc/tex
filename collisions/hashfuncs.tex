@@ -1,0 +1,83 @@
+\section{On HASH functions}
+\IEEEPARstart{H}{ash}
+functions are not only used for forwarding descisions, but for packet sampling \cite{Molina}, cryptography 
+\cite{Sklavos2003}\cite{Kang2002} and traffic  flow analysis/prioritization \cite{Intel2009}.
+
+ In the previous section we have assumed that 1) the distribution of 
+MAC addresses is uniform or 2) that the output of the hashing algorithm
+is sufficiently unpredictable. A fundamental paradigm of cryptography is that we can convert any distribution 
+into a uniform distribution by means of a sufficiently effective hashing algorithm.
+The various cryptographic hashfunctions MD4, MD5, SHA-1, SHA-256, etc. will certainly do the trick,
+but would in this case be an overengineered solution.
+
+
+but these are often too computationally intensive or introduces latency which prevents wire-speed
+forwarding.
+One report \cite{Stancu2003} shows that if the hashing is poorly done a MAC address size of 4096
+entries can be reduced to only 80 entries effectively wasting 98\% of the address table!
+In some cases, for example in the case [5], the network designer had full control over the 
+distribution of MAC addresses in their network and could alleviate the problem, but this is not 
+the case in general.
+
+\subsection{XOR hashing}
+The simplest hashing possible is the XOR method mentioned above. Although this method 
+is far from random it is often used in practice. The main reason is
+its simplicity which lends itself to parallelism, which leads to low latency implementations in ASICS.
+XOR based hashing algorithms have been analyzed in \cite{Vandiren2005} and \cite{Martinez2005}.
+
+An interesting side effect of this implementation is the good performance results it gives on standardized
+test suites. In particular a switch test suite named UNH
+for the institution that tests for interoperability, University of New Hampshire, mandates 
+that certain tests uses linearly incrementing MAC addresses. In this case this will lead 
+to an essentially perfect utilization of the MAC address table, as will be shows in the simulations.
+
+Computing an 8 bit hash value using this method, one would simply xor together the six bytes of
+the MAC address: 
+$$h = MAC_1 \oplus MAC_2 \oplus MAC_3 \oplus MAC_4 \oplus MAC_5 \oplus MAC_6$$
+
+instead of performing the xor on the 8 bit bytes, other bit-widths could be used. With some padding scheme 
+essentially  any n-bit hash value up to the length (in bits) of the MAC address (and associated data)  can be 
+achieved using this method.
+
+
+\subsection{Pearson hashing}
+Pearson hashing is a CBC-MAC using a lookup table $T$, and produces an 8 bit hash
+value. Pearson hashing, or some modification of it, is used in at least one series of 
+commercial switch products \cite{Intel2009}.
+\lstset{language=C}
+\begin{lstlisting}
+  hash := 0
+  for each c in C loop
+    index := hash xor c
+    hash := T[index]
+  end loop
+  return hash
+\end{lstlisting}
+Pearson hashing ensures that not only the individual bytes of the data stream contributes to 
+the final hash value. Also their order affects the hash value. This is a necessary property 
+in cryptographic systems, but not strictly needed here. Because of this property this 
+algorhithm cannot be parallelized.
+
+\subsection{Radix hashing}
+Another possibility is to
+consider the MAC address array as a six digit Base-R number modulus M.
+If the values for R and M are chosen in a suitable manner this method 
+should provide a reasonable uniform filling of the bins \cite{Sedgewick2011}. 
+
+
+\lstset{language=C}
+\begin{lstlisting}
+  hash := 0
+  R := 31
+  M := 257
+  for each c in C loop
+    hash := (R * hash + c) mod M
+  end loop
+  return hash
+\end{lstlisting}
+
+There are a couple of problems with this algorithm. First the value of $M$ should be a prime number in 
+order to spread the hash values  evenly, and typically a value which is a power of 2 is desired. Secondly
+the method uses the modulus operation which is fairly slow.
+
+

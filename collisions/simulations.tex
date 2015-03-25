@@ -1,0 +1,16 @@
+\section{Simulations}
+\IEEEPARstart{H}{ere}
+we perform some simulations combining MAC address table models with the three hashing functions mentioned 
+above. We adopt the nomenclature from \cite{Stancu2003}, in which the MAC addresses used in the simulations
+are constructed by a combination of arbitrarily chosen but fixed values denoted $xx, yy$ and $zz$. $\alpha\alpha$
+are linearly generated numbers and $\beta\beta$ and $\gamma\gamma$ are random numbers. For example using a value of
+xx:yy:zz:$\alpha\alpha$:$\alpha\alpha$:$\alpha\alpha$ means that the vendor ID (the three first bytes) is fixed at some value, and the 
+device ID (the last three bytes) are varied linearly starting at 00:00:00. The patterns we have chosen to simulate are
+
+xx:yy:zz:00:$\alpha\alpha$:$\alpha\alpha$
+
+$\beta\beta$:$\beta\beta$:$\beta\beta$:$\alpha\alpha$:$\alpha\alpha$:$\alpha\alpha$
+
+$\beta\beta$:$\beta\beta$:$\beta\beta$:$\gamma\gamma$:$\gamma\gamma$:$\gamma\gamma$
+
+and the random numbers are uniformly distributed.
