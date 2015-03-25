@@ -1,15 +1,18 @@
 
-
-quick:
-	pdflatex -shell-escape article.tex 
+LATEX = pdflatex -shell-escape
+MAIN  = article
+TEX   = $(MAIN).tex
+PDF   = $(MAIN).pdf
 
 all:
-	pdflatex -shell-escape article.tex 
-	pdflatex -shell-escape article.tex 	
+	$(LATEX) $(TEX) 
 	bibtex article
-	pdflatex -shell-escape article.tex 
-	
+	$(LATEX) $(TEX) 
+	$(LATEX) $(TEX) 
+	open $(PDF) 
 
+view:
+	open $(PDF)
 
 clean:
-	rm -f *.aux *.log article.pdf
+	rm -f *.aux *.log $(PDF) $(MAIN).bbl $(MAIN).blg
